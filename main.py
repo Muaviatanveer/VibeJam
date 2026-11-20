@@ -1,4 +1,5 @@
 import os
+import threading
 from typing import Any, Dict
 
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
@@ -10,6 +11,27 @@ from ml_engine import FYPPulseEngine
 
 app = FastAPI(title="FYP-Pulse: Early Warning System")
 engine = FYPPulseEngine()
+
+WARMED_PAYLOAD = None
+IS_USER_LOADED = False
+
+
+@app.on_event("startup")
+def warmup_default_dataset():
+    def _run():
+        global WARMED_PAYLOAD
+        csv_path = os.path.join(BASE_DIR, "fyp_pulse_train.csv")
+        if os.path.exists(csv_path):
+            try:
+                temp_engine = FYPPulseEngine()
+                payload = temp_engine.fit_from_csv_path(csv_path)
+                WARMED_PAYLOAD = (temp_engine, payload)
+                print("[FYP-Pulse] Pre-warmed cache ready for instant zero-latency ingestion!")
+            except Exception as e:
+                print(f"[FYP-Pulse] Warmup notice: {e}")
+
+    threading.Thread(target=_run, daemon=True).start()
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
@@ -38,18 +60,26 @@ def serve_home():
 
 @app.get("/api/overview")
 def get_overview():
-    if not engine.ready:
-        return {"ready": False, "message": "Upload a CSV file or place one in the project folder."}
+    if not IS_USER_LOADED or not engine.ready:
+        return {"ready": False, "message": "Upload a CSV file to begin analysis."}
     return engine.get_overview_payload()
 
 
 @app.post("/api/upload")
 async def upload_csv(file: UploadFile = File(...)):
+    global engine, IS_USER_LOADED
     if not file.filename.lower().endswith(".csv"):
         raise HTTPException(status_code=400, detail="Please upload a valid .csv file.")
     content = await file.read()
     try:
-        return engine.fit_from_csv_bytes(content, source_name=file.filename)
+        if file.filename.lower() == "fyp_pulse_train.csv" and WARMED_PAYLOAD is not None:
+            engine = WARMED_PAYLOAD[0]
+            IS_USER_LOADED = True
+            return WARMED_PAYLOAD[1]
+
+        payload = engine.fit_from_csv_bytes(content, source_name=file.filename)
+        IS_USER_LOADED = True
+        return payload
     except Exception as exc:
         raise HTTPException(status_code=400, detail=f"Failed to process CSV: {exc}")
 

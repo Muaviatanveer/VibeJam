@@ -1736,15 +1736,32 @@
             showLoading(`INGESTING ${file.name.toUpperCase()} & TRAINING 4 CALIBRATED MODELS...`);
             const fd = new FormData();
             fd.append('file', file);
+
+            const msgs = [
+                `INGESTING ${file.name.toUpperCase()} & RUNNING FORENSIC CLEANING...`,
+                "FITTING CALIBRATED SOFT-VOTING ENSEMBLE (LR, RF, HISTGB)...",
+                "CALIBRATING PLATT PROBABILITIES & EMPIRICAL TIERS...",
+                "BUILDING CAPACITY WATCHLIST & INTERVENTIONAL AUDIT..."
+            ];
+            let msgIdx = 0;
+            const timer = setInterval(() => {
+                msgIdx = (msgIdx + 1) % msgs.length;
+                const el = document.getElementById('loadingText');
+                if (el) el.textContent = msgs[msgIdx];
+            }, 2500);
+
             try {
                 const res = await fetch('/api/upload', { method: 'POST', body: fd });
+                clearInterval(timer);
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.detail || 'Upload failed');
                 renderAll(data);
             } catch (err) {
+                clearInterval(timer);
                 console.error('Upload error:', err);
                 alert('Upload Error: ' + err.message);
             } finally {
+                clearInterval(timer);
                 hideLoading();
             }
         }

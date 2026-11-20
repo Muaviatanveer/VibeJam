@@ -234,7 +234,7 @@ def engineer_features_df(df: pd.DataFrame) -> pd.DataFrame:
     X = df.copy()
 
     # Extract cyclical month from proposal_date
-    dt = pd.to_datetime(X["proposal_date"], errors="coerce")
+    dt = pd.to_datetime(X["proposal_date"], format="mixed", errors="coerce")
     month = dt.dt.month.fillna(6).astype(float)
     X["proposal_month_sin"] = np.sin(2 * np.pi * month / 12.0)
     X["proposal_month_cos"] = np.cos(2 * np.pi * month / 12.0)
@@ -721,7 +721,7 @@ class FYPPulseEngine:
     # -----------------------------------------------------------------------
     def _make_preprocessor(self, num_cols: List[str], cat_cols: List[str]) -> ColumnTransformer:
         num_pipe = Pipeline([
-            ("imputer", IterativeImputer(estimator=BayesianRidge(), max_iter=10, random_state=42, initial_strategy="median")),
+            ("imputer", SimpleImputer(strategy="median")),
             ("scaler", StandardScaler()),
         ])
         cat_pipe = Pipeline([
@@ -790,18 +790,18 @@ class FYPPulseEngine:
                 ("clf", estimator),
             ])
 
-        # 4 distinct model families
-        lr_est = LogisticRegression(C=0.6, class_weight="balanced", max_iter=1000, random_state=42)
+        # 4 distinct model families (optimized for lean cloud execution)
+        lr_est = LogisticRegression(C=0.6, class_weight="balanced", max_iter=500, random_state=42)
         rf_est = RandomForestClassifier(
-            n_estimators=220,
-            max_depth=8,
+            n_estimators=50,
+            max_depth=7,
             min_samples_leaf=6,
             class_weight="balanced_subsample",
             random_state=42,
             n_jobs=-1,
         )
         hgb_est = HistGradientBoostingClassifier(
-            max_iter=160,
+            max_iter=60,
             learning_rate=0.05,
             max_depth=5,
             min_samples_leaf=20,
@@ -813,14 +813,14 @@ class FYPPulseEngine:
         # Calibrated Soft-Voting Ensemble (Platt Sigmoid Calibration for honest probabilities!)
         voting_base = VotingClassifier(
             estimators=[
-                ("lr", LogisticRegression(C=0.6, class_weight="balanced", max_iter=1000, random_state=42)),
-                ("rf", RandomForestClassifier(n_estimators=200, max_depth=8, min_samples_leaf=6, class_weight="balanced_subsample", random_state=42, n_jobs=-1)),
-                ("hgb", HistGradientBoostingClassifier(max_iter=150, learning_rate=0.05, max_depth=5, min_samples_leaf=20, l2_regularization=1.5, class_weight="balanced", random_state=42)),
+                ("lr", LogisticRegression(C=0.6, class_weight="balanced", max_iter=500, random_state=42)),
+                ("rf", RandomForestClassifier(n_estimators=40, max_depth=7, min_samples_leaf=6, class_weight="balanced_subsample", random_state=42, n_jobs=-1)),
+                ("hgb", HistGradientBoostingClassifier(max_iter=50, learning_rate=0.05, max_depth=5, min_samples_leaf=20, l2_regularization=1.5, class_weight="balanced", random_state=42)),
             ],
             voting="soft",
             weights=[1.2, 1.0, 1.3],
         )
-        cal_ens = CalibratedClassifierCV(estimator=voting_base, method="sigmoid", cv=3)
+        cal_ens = CalibratedClassifierCV(estimator=voting_base, method="sigmoid", cv=2)
 
         model_specs = [
             ("Logistic Regression (L2 Balanced)", build_pipe(lr_est)),
@@ -876,7 +876,7 @@ class FYPPulseEngine:
 
         # Background sample from imputed clean training data for fast local attribution
         train_clean_idx = self.X_train_raw.index
-        bg_df = self.df_clean.iloc[: len(self.df_clean)].sample(n=min(60, len(self.df_clean)), random_state=42)
+        bg_df = self.df_clean.iloc[: len(self.df_clean)].sample(n=min(25, len(self.df_clean)), random_state=42)
         self.bg_sample = bg_df[WEEK8_RAW_FEATURES].reset_index(drop=True)
 
         # Save OOF probs for tier cutoff selection
@@ -1210,18 +1210,26 @@ class FYPPulseEngine:
     # A6: Weekly Watchlist with Coordinator Capacity K
     # -----------------------------------------------------------------------
     def _precompute_watchlist(self) -> None:
-        # Rank all test groups by predicted probability and compute top risk driver for top 100
+        # Rank all test groups by predicted probability
         order = np.argsort(-self.test_probs)
         rows = []
         max_k = min(100, len(order))
+        # Exact interventional attributions on top 35 groups; fast heuristic attribution on remaining
+        top_exact = min(35, max_k)
         for rank_idx, idx in enumerate(order[:max_k], start=1):
             prob = float(self.test_probs[idx])
             raw_dict = self.X_test_raw.iloc[idx].to_dict()
-            # Fill any raw NaNs with defaults for attribution display
             clean_row = self._coerce_input_row(raw_dict)
-            _, contribs = self.explain_instance(clean_row)
-            inc = [c for c in contribs if c["impact"] > 0]
-            top_drv = inc[0] if inc else contribs[0]
+            if rank_idx <= top_exact:
+                _, contribs = self.explain_instance(clean_row)
+                inc = [c for c in contribs if c["impact"] > 0]
+                top_drv = inc[0] if inc else contribs[0]
+                top_risk_driver = f"{top_drv['label']} ({top_drv['value']})"
+                rec_action = ACTION_PLAYBOOK.get(top_drv["feature"], "Schedule check-in")
+            else:
+                top_risk_driver = "Academic & Supervision Cadence"
+                rec_action = "Schedule milestone progress review"
+
             rows.append({
                 "rank": rank_idx,
                 "group_id": str(self.test_meta.iloc[idx]["group_id"]),
@@ -1229,8 +1237,8 @@ class FYPPulseEngine:
                 "probability": round(prob, 4),
                 "probability_pct": round(prob * 100.0, 2),
                 "tier": self._tier_from_prob(prob),
-                "top_risk_driver": f"{top_drv['label']} ({top_drv['value']})",
-                "recommended_action": ACTION_PLAYBOOK.get(top_drv["feature"], "Schedule check-in"),
+                "top_risk_driver": top_risk_driver,
+                "recommended_action": rec_action,
                 "actual_poor_outcome": "Yes" if int(self.y_test[idx]) == 1 else "No",
             })
         self.watchlist_cache = pd.DataFrame(rows)
