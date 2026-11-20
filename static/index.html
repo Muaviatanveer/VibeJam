@@ -40,7 +40,7 @@
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
-            background-image: 
+            background-image:
                 radial-gradient(at 15% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 40%),
                 radial-gradient(at 85% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 40%);
         }
@@ -101,6 +101,7 @@
                 opacity: 0;
                 transform: translateY(4px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -208,17 +209,20 @@
         <!-- Top Navigation Bar -->
         <header class="glass px-5 py-3.5 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 font-bold flex items-center justify-center text-xs tracking-wider shadow-sm">
+                <div
+                    class="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 font-bold flex items-center justify-center text-xs tracking-wider shadow-sm">
                     FP
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
                         <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">FYP-PULSE</h1>
-                        <span class="text-[10px] mono uppercase px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-300 border border-zinc-700/60 font-medium">
+                        <span
+                            class="text-[10px] mono uppercase px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-300 border border-zinc-700/60 font-medium">
                             Early Warning System · Week 8
                         </span>
                     </div>
-                    <p class="text-xs text-zinc-400">Zero-Leakage Calibrated ML · Local Interventional Attributions · Coordinator Decision Cockpit</p>
+                    <p class="text-xs text-zinc-400">Zero-Leakage Calibrated ML · Local Interventional Attributions ·
+                        Coordinator Decision Cockpit</p>
                 </div>
             </div>
 
@@ -239,7 +243,8 @@
 
         <!-- Executive KPI Telemetry Deck (Linear Minimalist Style) -->
         <section class="glass p-5 sm:p-6 space-y-4">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-zinc-800/80 pb-3">
+            <div
+                class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-zinc-800/80 pb-3">
                 <div>
                     <div class="flex items-center gap-2">
                         <span id="pipelineStatusBadge" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-zinc-800 text-zinc-400 border border-zinc-700/60">
@@ -264,7 +269,8 @@
                         <span>Cohort Cleaned</span>
                         <span class="text-zinc-500 text-[11px] font-mono" id="heroRemovedRows">0 excluded</span>
                     </div>
-                    <div id="heroCleanedRows" class="text-2xl sm:text-3xl font-extrabold mono text-zinc-100 mt-2">0</div>
+                    <div id="heroCleanedRows" class="text-2xl sm:text-3xl font-extrabold mono text-zinc-100 mt-2">0
+                    </div>
                     <div class="text-[11px] text-zinc-500 mt-1">Verified Week-8 records</div>
                 </div>
 
@@ -273,7 +279,8 @@
                         <span>At-Risk Prevalence</span>
                         <span class="text-zinc-500 text-[11px] font-mono" id="heroPoorCount">0 of 0 total</span>
                     </div>
-                    <div id="heroPoorRate" class="text-2xl sm:text-3xl font-extrabold mono text-zinc-300 mt-2">0.0%</div>
+                    <div id="heroPoorRate" class="text-2xl sm:text-3xl font-extrabold mono text-zinc-300 mt-2">0.0%
+                    </div>
                     <div class="text-[11px] text-zinc-500 mt-1">Historical poor outcome baseline</div>
                 </div>
 
@@ -300,14 +307,17 @@
         <!-- Dropzone Card -->
         <section id="emptyStateBanner"
             class="glass p-8 text-center space-y-3 border-2 border-dashed border-zinc-800 hover:border-zinc-700 rounded-xl cursor-pointer transition">
-            <div class="w-10 h-10 mx-auto rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 text-lg">
+            <div
+                class="w-10 h-10 mx-auto rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 text-lg">
                 ↑
             </div>
             <h3 class="text-sm sm:text-base font-bold text-zinc-100">Upload FYP Cohort CSV to Begin Analysis</h3>
             <p class="text-zinc-400 max-w-md mx-auto text-xs leading-relaxed">
-                Click here or use the <strong class="text-zinc-200">↑ Upload CSV</strong> button to ingest your cohort dataset. All sections below will populate live.
+                Click here or use the <strong class="text-zinc-200">↑ Upload CSV</strong> button to ingest your cohort
+                dataset. All sections below will populate live.
             </p>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-400 text-[11px] mono">
+            <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-400 text-[11px] mono">
                 Automated MICE imputation · Platt-calibrated Soft-Voting · Wilson 95% CIs
             </div>
         </section>
@@ -368,14 +378,18 @@
                                 </tr>
                             </thead>
                             <tbody id="a1RulesBody" class="divide-y divide-zinc-800/60 text-zinc-300">
-                                <tr><td colspan="3" class="py-6 text-center text-zinc-500 font-mono text-xs">No dataset uploaded yet. Ingest CSV above to run forensic audit.</td></tr>
+                                <tr>
+                                    <td colspan="3" class="py-6 text-center text-zinc-500 font-mono text-xs">No dataset
+                                        uploaded yet. Ingest CSV above to run forensic audit.</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
                 <div class="glass p-5 space-y-3">
-                    <h3 class="text-sm font-bold text-zinc-100 border-b border-zinc-800 pb-3">Values Corrected Per Column</h3>
+                    <h3 class="text-sm font-bold text-zinc-100 border-b border-zinc-800 pb-3">Values Corrected Per
+                        Column</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs sm:text-sm">
                             <thead class="text-xs uppercase text-zinc-400 border-b border-zinc-800">
@@ -389,7 +403,10 @@
                                 </tr>
                             </thead>
                             <tbody id="a1ColsBody" class="divide-y divide-zinc-800/60 mono text-zinc-300">
-                                <tr><td colspan="6" class="py-6 text-center text-zinc-500 font-sans text-xs">No column corrections yet.</td></tr>
+                                <tr>
+                                    <td colspan="6" class="py-6 text-center text-zinc-500 font-sans text-xs">No column
+                                        corrections yet.</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -404,7 +421,8 @@
                     <!-- Chart 1: Team Factor -->
                     <div class="glass p-5 space-y-3">
                         <div class="flex items-center justify-between">
-                            <h3 id="chart1Title" class="text-sm font-bold text-zinc-100">Team Academic Floor vs. Poor-Outcome Rate</h3>
+                            <h3 id="chart1Title" class="text-sm font-bold text-zinc-100">Team Academic Floor vs.
+                                Poor-Outcome Rate</h3>
                             <span class="text-xs mono text-zinc-400">Factor 1</span>
                         </div>
                         <div id="chart1Plot" class="h-64"></div>
@@ -414,7 +432,8 @@
                     <!-- Chart 2: Supervisor Factor -->
                     <div class="glass p-5 space-y-3">
                         <div class="flex items-center justify-between">
-                            <h3 id="chart2Title" class="text-sm font-bold text-zinc-100">Supervisor Meetings vs. Failure Rate</h3>
+                            <h3 id="chart2Title" class="text-sm font-bold text-zinc-100">Supervisor Meetings vs. Failure
+                                Rate</h3>
                             <span class="text-xs mono text-zinc-400">Factor 2</span>
                         </div>
                         <div id="chart2Plot" class="h-64"></div>
@@ -424,7 +443,8 @@
                     <!-- Chart 3: Context Factor -->
                     <div class="glass p-5 space-y-3">
                         <div class="flex items-center justify-between">
-                            <h3 id="chart3Title" class="text-sm font-bold text-zinc-100">Project Domain Type vs. Risk</h3>
+                            <h3 id="chart3Title" class="text-sm font-bold text-zinc-100">Project Domain Type vs. Risk
+                            </h3>
                             <span class="text-xs mono text-zinc-400">Factor 3</span>
                         </div>
                         <div id="chart3Plot" class="h-64"></div>
@@ -434,7 +454,8 @@
                     <!-- Chart 4: Engineered Feature - CGPA Gap -->
                     <div class="glass p-5 space-y-3">
                         <div class="flex items-center justify-between">
-                            <h3 id="chart4Title" class="text-sm font-bold text-zinc-100">Engineered Feature: CGPA Disparity Gap</h3>
+                            <h3 id="chart4Title" class="text-sm font-bold text-zinc-100">Engineered Feature: CGPA
+                                Disparity Gap</h3>
                             <span class="text-xs mono text-indigo-400">Engineered 1</span>
                         </div>
                         <div id="chart4Plot" class="h-64"></div>
@@ -445,7 +466,8 @@
                 <!-- Chart 5: Engineered Supervision Bandwidth -->
                 <div class="glass p-5 space-y-3">
                     <div class="flex items-center justify-between">
-                        <h3 id="chart5Title" class="text-sm font-bold text-zinc-100">Engineered Feature: Supervision Bandwidth (Meetings / Active Load)</h3>
+                        <h3 id="chart5Title" class="text-sm font-bold text-zinc-100">Engineered Feature: Supervision
+                            Bandwidth (Meetings / Active Load)</h3>
                         <span class="text-xs mono text-indigo-400">Engineered 2</span>
                     </div>
                     <div id="chart5Plot" class="h-64"></div>
@@ -459,8 +481,12 @@
                         <h3 class="text-sm font-bold text-zinc-100">Temporal Leakage Defense Protocol</h3>
                     </div>
                     <div class="text-xs text-zinc-400 leading-relaxed space-y-1">
-                        <p>All features post-dating Week 8 (<code class="mono text-zinc-200">final_defense_score</code>, <code class="mono text-zinc-200">extension_grant</code>) were explicitly purged before training.</p>
-                        <p>Proposal dates are converted to cyclical seasonal trigonometric features (<code class="mono text-zinc-200">sin/cos</code>) preventing raw timestamp memorization.</p>
+                        <p>All features post-dating Week 8 (<code class="mono text-zinc-200">final_defense_score</code>,
+                            <code class="mono text-zinc-200">extension_grant</code>) were explicitly purged before
+                            training.
+                        </p>
+                        <p>Proposal dates are converted to cyclical seasonal trigonometric features (<code
+                                class="mono text-zinc-200">sin/cos</code>) preventing raw timestamp memorization.</p>
                     </div>
                 </div>
             </section>
@@ -472,10 +498,14 @@
                 <div class="glass p-5 space-y-4">
                     <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-3">
                         <div>
-                            <h3 class="text-sm font-bold text-zinc-100">Candidate Classifier Benchmarks (Stratified 5-Fold CV)</h3>
-                            <p class="text-xs text-zinc-400">Selection strictly optimized on Out-of-Fold ROC-AUC and Brier calibration score</p>
+                            <h3 class="text-sm font-bold text-zinc-100">Candidate Classifier Benchmarks (Stratified
+                                5-Fold CV)</h3>
+                            <p class="text-xs text-zinc-400">Selection strictly optimized on Out-of-Fold ROC-AUC and
+                                Brier calibration score</p>
                         </div>
-                        <div id="selectedModelBadge" class="px-2.5 py-1 rounded-md text-xs font-mono font-medium badge-green">Awaiting Ingestion</div>
+                        <div id="selectedModelBadge"
+                            class="px-2.5 py-1 rounded-md text-xs font-mono font-medium badge-green">Awaiting Ingestion
+                        </div>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -492,10 +522,42 @@
                                 </tr>
                             </thead>
                             <tbody id="a3ArenaBody" class="divide-y divide-zinc-800/60 mono text-zinc-300">
-                                <tr><td class="py-2.5 pr-3 font-sans text-zinc-400">Logistic Regression (L2)</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0%</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0000</td><td class="py-2.5 pl-3 text-zinc-500">Pending Data</td></tr>
-                                <tr><td class="py-2.5 pr-3 font-sans text-zinc-400">Random Forest (Balanced)</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0%</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0000</td><td class="py-2.5 pl-3 text-zinc-500">Pending Data</td></tr>
-                                <tr><td class="py-2.5 pr-3 font-sans text-zinc-400">HistGradientBoosting (Balanced)</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0%</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0000</td><td class="py-2.5 pl-3 text-zinc-500">Pending Data</td></tr>
-                                <tr><td class="py-2.5 pr-3 font-sans text-zinc-400">Calibrated Soft-Voting Ensemble</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0%</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0000</td><td class="py-2.5 pl-3 text-zinc-500">Pending Data</td></tr>
+                                <tr>
+                                    <td class="py-2.5 pr-3 font-sans text-zinc-400">Logistic Regression (L2)</td>
+                                    <td class="py-2.5 px-3">0.000</td>
+                                    <td class="py-2.5 px-3">0.000</td>
+                                    <td class="py-2.5 px-3">0.0%</td>
+                                    <td class="py-2.5 px-3">0.000</td>
+                                    <td class="py-2.5 px-3">0.0000</td>
+                                    <td class="py-2.5 pl-3 text-zinc-500">Pending Data</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2.5 pr-3 font-sans text-zinc-400">Random Forest (Balanced)</td>
+                                    <td class="py-2.5 px-3">0.000</td>
+                                    <td class="py-2.5 px-3">0.000</td>
+                                    <td class="py-2.5 px-3">0.0%</td>
+                                    <td class="py-2.5 px-3">0.000</td>
+                                    <td class="py-2.5 px-3">0.0000</td>
+                                    <td class="py-2.5 pl-3 text-zinc-500">Pending Data</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2.5 pr-3 font-sans text-zinc-400">HistGradientBoosting (Balanced)</td>
+                                    <td class="py-2.5 px-3">0.000</td>
+                                    <td class="py-2.5 px-3">0.000</td>
+                                    <td class="py-2.5 px-3">0.0%</td>
+                                    <td class="py-2.5 px-3">0.000</td>
+                                    <td class="py-2.5 px-3">0.0000</td>
+                                    <td class="py-2.5 pl-3 text-zinc-500">Pending Data</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2.5 pr-3 font-sans text-zinc-400">Calibrated Soft-Voting Ensemble</td>
+                                    <td class="py-2.5 px-3">0.000</td>
+                                    <td class="py-2.5 px-3">0.000</td>
+                                    <td class="py-2.5 px-3">0.0%</td>
+                                    <td class="py-2.5 px-3">0.000</td>
+                                    <td class="py-2.5 px-3">0.0000</td>
+                                    <td class="py-2.5 pl-3 text-zinc-500">Pending Data</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -504,20 +566,24 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
                     <!-- Model Justification Card -->
                     <div class="glass p-5 space-y-3">
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-300">Model Selection Justification</h4>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-300">Model Selection
+                            Justification</h4>
                         <p id="a3JustificationText" class="text-xs text-zinc-400 leading-relaxed">
-                            Upload a cohort dataset to execute 5-Fold Stratified Cross-Validation across Logistic Regression, Random Forest, Histogram Gradient Boosting, and Platt-Calibrated Soft-Voting.
+                            Upload a cohort dataset to execute 5-Fold Stratified Cross-Validation across Logistic
+                            Regression, Random Forest, Histogram Gradient Boosting, and Platt-Calibrated Soft-Voting.
                         </p>
                     </div>
 
                     <!-- Cost Matrix / Decision Threshold -->
                     <div class="glass p-5 space-y-3">
                         <div class="flex items-center justify-between">
-                            <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-300">Cost-Optimal Decision Threshold</h4>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-300">Cost-Optimal Decision
+                                Threshold</h4>
                             <span id="optimalThreshBadge" class="text-xs mono text-zinc-300">Awaiting Ingestion</span>
                         </div>
                         <p class="text-xs text-zinc-400 leading-relaxed">
-                            The decision boundary balances early detection recall against coordinator intervention fatigue on out-of-fold validation splits.
+                            The decision boundary balances early detection recall against coordinator intervention
+                            fatigue on out-of-fold validation splits.
                         </p>
                     </div>
                 </div>
@@ -573,43 +639,53 @@
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Group Size (1–5)</label>
-                                <input type="number" name="group_size" min="1" max="5" step="1" value="3" class="input-glass" />
+                                <input type="number" name="group_size" min="1" max="5" step="1" value="3"
+                                    class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Mid-Eval Score (0–100)</label>
-                                <input type="number" name="mid_eval_score" min="0" max="100" step="0.5" value="70" class="input-glass" />
+                                <input type="number" name="mid_eval_score" min="0" max="100" step="0.5" value="70"
+                                    class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Team Avg CGPA (0–4)</label>
-                                <input type="number" name="team_avg_cgpa" min="0" max="4" step="0.01" value="3.0" class="input-glass" />
+                                <input type="number" name="team_avg_cgpa" min="0" max="4" step="0.01" value="3.0"
+                                    class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Team Min CGPA (≤ Avg)</label>
-                                <input type="number" name="team_min_cgpa" min="0" max="4" step="0.01" value="2.8" class="input-glass" />
+                                <input type="number" name="team_min_cgpa" min="0" max="4" step="0.01" value="2.8"
+                                    class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Supervisor Exp (0–45 yrs)</label>
-                                <input type="number" name="supervisor_experience_years" min="0" max="45" step="1" value="8" class="input-glass" />
+                                <input type="number" name="supervisor_experience_years" min="0" max="45" step="1"
+                                    value="8" class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Supervisor Active Groups (1–15)</label>
-                                <input type="number" name="supervisor_active_groups" min="1" max="15" step="1" value="4" class="input-glass" />
+                                <input type="number" name="supervisor_active_groups" min="1" max="15" step="1" value="4"
+                                    class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Proposal Revisions (0–10)</label>
-                                <input type="number" name="proposal_revisions" min="0" max="10" step="1" value="1" class="input-glass" />
+                                <input type="number" name="proposal_revisions" min="0" max="10" step="1" value="1"
+                                    class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Weeks to Approval (0–30)</label>
-                                <input type="number" name="weeks_to_proposal_approval" min="0" max="30" step="1" value="3" class="input-glass" />
+                                <input type="number" name="weeks_to_proposal_approval" min="0" max="30" step="1"
+                                    value="3" class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Supervisor Meetings 8wk (0–30)</label>
-                                <input type="number" name="supervisor_meetings_8wk" min="0" max="30" step="1" value="6" class="input-glass" />
+                                <input type="number" name="supervisor_meetings_8wk" min="0" max="30" step="1" value="6"
+                                    class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">GitHub Commits 8wk (0–1000)</label>
-                                <input type="number" name="github_commits_8wk" min="0" max="1000" step="1" value="60" class="input-glass" />
+                                <input type="number" name="github_commits_8wk" min="0" max="1000" step="1" value="60"
+                                    class="input-glass" />
                             </div>
 
                             <div class="col-span-2 pt-2 flex gap-3">
@@ -630,13 +706,17 @@
                         <div id="riskTiltCard" class="glass p-6 space-y-4">
                             <div class="flex items-start justify-between gap-3">
                                 <div>
-                                    <div class="text-xs mono uppercase tracking-wider text-zinc-400">Estimated Failure Risk</div>
-                                    <div id="predProbText" class="text-4xl font-extrabold mono text-zinc-100 mt-1">0.0%</div>
+                                    <div class="text-xs mono uppercase tracking-wider text-zinc-400">Estimated Failure
+                                        Risk</div>
+                                    <div id="predProbText" class="text-4xl font-extrabold mono text-zinc-100 mt-1">0.0%
+                                    </div>
                                 </div>
                                 <div class="text-right space-y-1.5">
                                     <span id="predTierBadge"
-                                        class="inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider badge-green">LOW RISK</span>
-                                    <div id="predOutcomeText" class="text-xs font-medium text-zinc-400">Awaiting Model Fit</div>
+                                        class="inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider badge-green">LOW
+                                        RISK</span>
+                                    <div id="predOutcomeText" class="text-xs font-medium text-zinc-400">Awaiting Model
+                                        Fit</div>
                                 </div>
                             </div>
 
@@ -656,15 +736,18 @@
                             <div class="p-3.5 rounded-lg bg-zinc-900 border border-zinc-800">
                                 <div class="text-[11px] mono uppercase tracking-wider text-zinc-400 font-bold mb-1">
                                     Recommended Coordinator Intervention</div>
-                                <p id="predSupportStep" class="text-xs text-zinc-300 font-medium">Standard academic monitoring.</p>
+                                <p id="predSupportStep" class="text-xs text-zinc-300 font-medium">Standard academic
+                                    monitoring.</p>
                             </div>
                         </div>
 
                         <!-- Top 3 Drivers (A5) -->
                         <div class="glass p-5 space-y-3">
                             <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
-                                <h4 class="text-xs font-bold uppercase text-zinc-300 tracking-wider">Top Risk Drivers (Attribution)</h4>
-                                <span class="text-[11px] mono text-zinc-500">Red = Risk Increase · Green = Protective</span>
+                                <h4 class="text-xs font-bold uppercase text-zinc-300 tracking-wider">Top Risk Drivers
+                                    (Attribution)</h4>
+                                <span class="text-[11px] mono text-zinc-500">Red = Risk Increase · Green =
+                                    Protective</span>
                             </div>
                             <div id="predTop3Container" class="space-y-2.5">
                                 <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-zinc-500">
@@ -675,9 +758,13 @@
 
                         <!-- A4 Monotonicity Verification Panel -->
                         <div class="glass p-5 space-y-3">
-                            <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-2">
-                                <h4 class="text-xs font-bold uppercase text-zinc-300 tracking-wider">Risk Tier Calibration Proof (A4)</h4>
-                                <span id="a4MonoBadge" class="text-[11px] mono px-2 py-0.5 rounded-md badge-green">Strictly Monotonic ✓</span>
+                            <div
+                                class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-2">
+                                <h4 class="text-xs font-bold uppercase text-zinc-300 tracking-wider">Risk Tier
+                                    Calibration Proof (A4)</h4>
+                                <span id="a4MonoBadge"
+                                    class="text-[11px] mono px-2 py-0.5 rounded-md badge-green">Strictly Monotonic
+                                    ✓</span>
                             </div>
                             <div id="a4TierProofGrid" class="grid grid-cols-3 gap-3">
                                 <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800">
@@ -687,7 +774,8 @@
                                     <div class="text-[10px] text-zinc-500">Observed failure rate (n=0)</div>
                                 </div>
                                 <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800">
-                                    <div class="text-[11px] mono uppercase text-zinc-400 font-semibold">Medium Risk</div>
+                                    <div class="text-[11px] mono uppercase text-zinc-400 font-semibold">Medium Risk
+                                    </div>
                                     <div class="text-xs text-zinc-500 mt-0.5">15%–40%</div>
                                     <div class="text-base font-extrabold mono text-zinc-300 mt-1.5">0.0%</div>
                                     <div class="text-[10px] text-zinc-500">Observed failure rate (n=0)</div>
@@ -709,9 +797,11 @@
             <!-- ================================================================= -->
             <section id="tab-a5" class="tab-panel space-y-5">
                 <div class="glass p-5 border-zinc-800 bg-zinc-900/40">
-                    <div class="text-xs mono uppercase tracking-wider text-zinc-400 mb-1">Fairness & Statistical Independence Audit</div>
+                    <div class="text-xs mono uppercase tracking-wider text-zinc-400 mb-1">Fairness & Statistical
+                        Independence Audit</div>
                     <p id="a5Takeaway" class="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">
-                        Awaiting cohort ingestion to run two-proportion Z-test across Leader Gender and campuses with ≥30 test groups.
+                        Awaiting cohort ingestion to run two-proportion Z-test across Leader Gender and campuses with
+                        ≥30 test groups.
                     </p>
                 </div>
 
@@ -733,8 +823,18 @@
                                     </tr>
                                 </thead>
                                 <tbody id="a5GenderBody" class="divide-y divide-zinc-800/60 text-zinc-200">
-                                    <tr><td class="py-2 font-sans font-medium text-zinc-300">Male Leader</td><td class="py-2">0</td><td class="py-2">0.0%</td><td class="py-2">0.0%</td></tr>
-                                    <tr><td class="py-2 font-sans font-medium text-zinc-300">Female Leader</td><td class="py-2">0</td><td class="py-2">0.0%</td><td class="py-2">0.0%</td></tr>
+                                    <tr>
+                                        <td class="py-2 font-sans font-medium text-zinc-300">Male Leader</td>
+                                        <td class="py-2">0</td>
+                                        <td class="py-2">0.0%</td>
+                                        <td class="py-2">0.0%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 font-sans font-medium text-zinc-300">Female Leader</td>
+                                        <td class="py-2">0</td>
+                                        <td class="py-2">0.0%</td>
+                                        <td class="py-2">0.0%</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -744,7 +844,9 @@
                     <div class="glass p-5 space-y-4">
                         <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-3">
                             <h3 class="text-sm font-bold text-zinc-100">Campus Audit (≥ 30 Test Groups)</h3>
-                            <span id="a5CampusGapBadge" class="text-xs mono px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400 border border-zinc-700">Awaiting Data</span>
+                            <span id="a5CampusGapBadge"
+                                class="text-xs mono px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400 border border-zinc-700">Awaiting
+                                Data</span>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs mono">
@@ -758,7 +860,10 @@
                                     </tr>
                                 </thead>
                                 <tbody id="a5CampusBody" class="divide-y divide-zinc-800/60 text-zinc-200">
-                                    <tr><td colspan="5" class="py-4 text-center text-zinc-500 font-sans">No campus records loaded.</td></tr>
+                                    <tr>
+                                        <td colspan="5" class="py-4 text-center text-zinc-500 font-sans">No campus
+                                            records loaded.</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -773,7 +878,9 @@
                 <div class="glass p-5 flex flex-wrap items-center justify-between gap-5">
                     <div class="flex-1 min-w-[240px] space-y-2">
                         <div class="flex items-center justify-between">
-                            <label for="watchlistKSlider" class="text-xs font-bold text-zinc-200 uppercase tracking-wider">Weekly Coordinator Capacity (K Groups)</label>
+                            <label for="watchlistKSlider"
+                                class="text-xs font-bold text-zinc-200 uppercase tracking-wider">Weekly Coordinator
+                                Capacity (K Groups)</label>
                             <span id="watchlistKVal" class="text-base font-bold mono text-zinc-100">30</span>
                         </div>
                         <input id="watchlistKSlider" type="range" min="10" max="100" step="1" value="30" />
@@ -811,10 +918,12 @@
                 </div>
 
                 <div class="glass p-5 space-y-3">
-                    <h3 class="text-sm font-bold text-zinc-100 border-b border-zinc-800 pb-3">Ranked Student Cohort Intervention Queue</h3>
+                    <h3 class="text-sm font-bold text-zinc-100 border-b border-zinc-800 pb-3">Ranked Student Cohort
+                        Intervention Queue</h3>
                     <div class="overflow-x-auto max-h-[520px] overflow-y-auto">
                         <table class="w-full text-left text-xs sm:text-sm">
-                            <thead class="text-xs uppercase text-zinc-400 border-b border-zinc-800 sticky top-0 bg-zinc-950/95">
+                            <thead
+                                class="text-xs uppercase text-zinc-400 border-b border-zinc-800 sticky top-0 bg-zinc-950/95">
                                 <tr>
                                     <th class="py-2.5 px-2">#</th>
                                     <th class="py-2.5 px-2">Group ID</th>
@@ -825,7 +934,10 @@
                                 </tr>
                             </thead>
                             <tbody id="a6TableBody" class="divide-y divide-zinc-800/60">
-                                <tr><td colspan="6" class="py-8 text-center text-zinc-500 font-sans text-xs">No groups queued. Ingest dataset to compute top-K intervention list.</td></tr>
+                                <tr>
+                                    <td colspan="6" class="py-8 text-center text-zinc-500 font-sans text-xs">No groups
+                                        queued. Ingest dataset to compute top-K intervention list.</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -840,8 +952,11 @@
                 <div class="p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
                     <span class="text-base text-amber-400">⚠</span>
                     <div class="text-xs text-amber-200 leading-relaxed">
-                        <strong class="uppercase tracking-wide mono font-semibold">Association ≠ Causation Notice:</strong>
-                        This simulator reflects statistical associations learned from historical cohorts — it does not guarantee a deterministic causal effect. Always combine model outputs with supervisor faculty judgment.
+                        <strong class="uppercase tracking-wide mono font-semibold">Association ≠ Causation
+                            Notice:</strong>
+                        This simulator reflects statistical associations learned from historical cohorts — it does not
+                        guarantee a deterministic causal effect. Always combine model outputs with supervisor faculty
+                        judgment.
                     </div>
                 </div>
 
@@ -851,7 +966,8 @@
                         <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-3">
                             <div>
                                 <h3 class="text-sm font-bold text-zinc-100">Actionable Intervention Levers</h3>
-                                <p class="text-xs text-zinc-400">Demographic & historical factors (gender, campus, CGPA) are locked</p>
+                                <p class="text-xs text-zinc-400">Demographic & historical factors (gender, campus, CGPA)
+                                    are locked</p>
                             </div>
                             <button id="btnFindBestLever" type="button"
                                 class="px-3 py-1.5 rounded-md bg-zinc-100 hover:bg-white text-zinc-950 font-bold text-xs transition shadow-sm">
@@ -878,7 +994,8 @@
                                 <div class="text-[11px] mono uppercase text-zinc-400">Before (Baseline)</div>
                                 <div id="wiBeforeProb" class="text-3xl font-extrabold mono text-zinc-100">0.0%</div>
                                 <span id="wiBeforeTier"
-                                    class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold uppercase badge-green">LOW RISK</span>
+                                    class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold uppercase badge-green">LOW
+                                    RISK</span>
                             </div>
                             <div id="wiAfterCard" class="glass p-5 space-y-2 transition-all duration-300">
                                 <div class="text-[11px] mono uppercase text-indigo-400">After Intervention</div>
@@ -887,19 +1004,23 @@
                                     <span id="wiDeltaText" class="text-xs font-bold mono text-zinc-500">(0.0 pp)</span>
                                 </div>
                                 <span id="wiAfterTier"
-                                    class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold uppercase badge-green">LOW RISK</span>
+                                    class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold uppercase badge-green">LOW
+                                    RISK</span>
                             </div>
                         </div>
 
                         <div class="glass p-5 space-y-2">
                             <div class="text-xs mono uppercase text-zinc-400">Updated Action Recommendation</div>
-                            <p id="wiAfterAction" class="text-xs text-zinc-300 leading-relaxed">Adjust levers on the left to simulate coordinator interventions.</p>
+                            <p id="wiAfterAction" class="text-xs text-zinc-300 leading-relaxed">Adjust levers on the
+                                left to simulate coordinator interventions.</p>
                         </div>
 
                         <!-- Best Lever Output Card -->
                         <div id="bestLeverBox" class="glass p-5 space-y-3 border-zinc-700 hidden">
-                            <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-2">
-                                <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-100">Optimal Single Lever Simulation</h4>
+                            <div
+                                class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-2">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-100">Optimal Single
+                                    Lever Simulation</h4>
                                 <button id="btnApplyBestLever" type="button"
                                     class="text-xs px-2.5 py-1 rounded-md bg-zinc-100 text-zinc-950 font-bold hover:bg-white transition">Apply
                                     Optimal Lever</button>
