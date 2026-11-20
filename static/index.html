@@ -5,6 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FYP-Pulse · Academic Risk Intelligence Platform</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,12 +60,6 @@
         .glass-hover:hover {
             border-color: var(--border-hover);
             box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
-        }
-
-        .surface-nested {
-            background: var(--surface-elevated);
-            border: 1px solid var(--border-subtle);
-            border-radius: 0.5rem;
         }
 
         /* Segmented Nav Controls (Linear Style) */
@@ -226,11 +222,12 @@
                 </div>
             </div>
 
+            <!-- Actions -->
             <div class="flex items-center gap-3">
                 <div id="datasetStatusBadge"
                     class="hidden sm:flex items-center gap-2 text-xs mono px-3 py-1.5 rounded-md bg-zinc-900 border border-zinc-800">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span id="datasetNameLabel" class="text-zinc-300">Waiting for CSV...</span>
+                    <span id="datasetStatusDot" class="w-2 h-2 rounded-full bg-zinc-500"></span>
+                    <span id="datasetNameLabel" class="text-zinc-400">No Dataset Uploaded</span>
                 </div>
                 <label
                     class="cursor-pointer inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-zinc-100 hover:bg-white text-zinc-950 font-semibold text-xs transition shadow-sm">
@@ -245,13 +242,14 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-zinc-800/80 pb-3">
                 <div>
                     <div class="flex items-center gap-2">
-                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Production Checkpoint
+                        <span id="pipelineStatusBadge" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-zinc-800 text-zinc-400 border border-zinc-700/60">
+                            <span id="pipelineStatusDot" class="w-1.5 h-1.5 rounded-full bg-zinc-500"></span>
+                            <span id="pipelineStatusText">Awaiting Data Ingestion</span>
                         </span>
-                        <span class="text-xs text-zinc-400">Week-8 Risk Surveillance</span>
+                        <span class="text-xs text-zinc-400">Week-8 Surveillance Cockpit</span>
                     </div>
                     <h2 class="text-lg sm:text-xl font-bold text-zinc-100 tracking-tight mt-1">
-                        Cohort Early Warning & Intervention Metrics
+                        Cohort Early Warning & Intervention Telemetry
                     </h2>
                 </div>
                 <div class="text-xs text-zinc-400 sm:text-right">
@@ -264,58 +262,58 @@
                 <div class="glass glass-hover p-4 rounded-xl">
                     <div class="flex items-center justify-between text-xs text-zinc-400 font-medium">
                         <span>Cohort Cleaned</span>
-                        <span class="text-emerald-400 text-[11px] font-mono" id="heroRemovedRows">--</span>
+                        <span class="text-zinc-500 text-[11px] font-mono" id="heroRemovedRows">0 excluded</span>
                     </div>
-                    <div id="heroCleanedRows" class="text-2xl sm:text-3xl font-extrabold mono text-zinc-100 mt-2">--</div>
+                    <div id="heroCleanedRows" class="text-2xl sm:text-3xl font-extrabold mono text-zinc-100 mt-2">0</div>
                     <div class="text-[11px] text-zinc-500 mt-1">Verified Week-8 records</div>
                 </div>
 
                 <div class="glass glass-hover p-4 rounded-xl">
                     <div class="flex items-center justify-between text-xs text-zinc-400 font-medium">
                         <span>At-Risk Prevalence</span>
-                        <span class="text-rose-400 text-[11px] font-mono" id="heroPoorCount">--</span>
+                        <span class="text-zinc-500 text-[11px] font-mono" id="heroPoorCount">0 of 0 total</span>
                     </div>
-                    <div id="heroPoorRate" class="text-2xl sm:text-3xl font-extrabold mono text-rose-400 mt-2">--</div>
+                    <div id="heroPoorRate" class="text-2xl sm:text-3xl font-extrabold mono text-zinc-300 mt-2">0.0%</div>
                     <div class="text-[11px] text-zinc-500 mt-1">Historical poor outcome baseline</div>
                 </div>
 
                 <div class="glass glass-hover p-4 rounded-xl">
                     <div class="flex items-center justify-between text-xs text-zinc-400 font-medium">
                         <span>Discrimination (ROC-AUC)</span>
-                        <span class="text-indigo-400 text-[11px] font-mono">Stratified 5-Fold</span>
+                        <span class="text-zinc-500 text-[11px] font-mono">Stratified 5-Fold</span>
                     </div>
-                    <div id="heroRocAuc" class="text-2xl sm:text-3xl font-extrabold mono text-indigo-300 mt-2">--</div>
-                    <div id="heroModelShort" class="text-[11px] text-zinc-500 mt-1 truncate">--</div>
+                    <div id="heroRocAuc" class="text-2xl sm:text-3xl font-extrabold mono text-zinc-300 mt-2">0.000</div>
+                    <div id="heroModelShort" class="text-[11px] text-zinc-500 mt-1 truncate">Awaiting Model Fit</div>
                 </div>
 
                 <div class="glass glass-hover p-4 rounded-xl">
                     <div class="flex items-center justify-between text-xs text-zinc-400 font-medium">
                         <span>Intervention Recall</span>
-                        <span id="heroVsDummy" class="text-emerald-400 text-[11px] font-mono">vs 0% dummy</span>
+                        <span id="heroVsDummy" class="text-zinc-500 text-[11px] font-mono">vs 0% dummy</span>
                     </div>
-                    <div id="heroRecall" class="text-2xl sm:text-3xl font-extrabold mono text-emerald-400 mt-2">--</div>
+                    <div id="heroRecall" class="text-2xl sm:text-3xl font-extrabold mono text-zinc-300 mt-2">0.0%</div>
                     <div class="text-[11px] text-zinc-500 mt-1">Catch rate at cost-optimal cut</div>
                 </div>
             </div>
         </section>
 
-        <!-- Empty State Banner (Clean Dropzone when no CSV is loaded) -->
+        <!-- Dropzone Card -->
         <section id="emptyStateBanner"
-            class="glass p-12 text-center space-y-4 border-2 border-dashed border-zinc-800 hover:border-zinc-700 rounded-xl cursor-pointer transition hidden">
-            <div class="w-12 h-12 mx-auto rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 text-xl">
+            class="glass p-8 text-center space-y-3 border-2 border-dashed border-zinc-800 hover:border-zinc-700 rounded-xl cursor-pointer transition">
+            <div class="w-10 h-10 mx-auto rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 text-lg">
                 ↑
             </div>
-            <h3 class="text-lg font-bold text-zinc-100">No Dataset Ingested Yet</h3>
+            <h3 class="text-sm sm:text-base font-bold text-zinc-100">Upload FYP Cohort CSV to Begin Analysis</h3>
             <p class="text-zinc-400 max-w-md mx-auto text-xs leading-relaxed">
-                Click here or use the <strong class="text-zinc-200">↑ Upload CSV</strong> button to ingest your cohort dataset and run the automated A1–A7 evaluation pipeline.
+                Click here or use the <strong class="text-zinc-200">↑ Upload CSV</strong> button to ingest your cohort dataset. All sections below will populate live.
             </p>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs mono">
-                Supports standard .csv · Automated MICE imputation & calibration
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-400 text-[11px] mono">
+                Automated MICE imputation · Platt-calibrated Soft-Voting · Wilson 95% CIs
             </div>
         </section>
 
-        <!-- Main Workspace (shown once data is ready) -->
-        <div id="workspace" class="space-y-5 hidden">
+        <!-- Main Workspace (All Sections Live & Visible) -->
+        <div id="workspace" class="space-y-5">
 
             <!-- Tab Navigation (Segmented Pill Bar) -->
             <nav class="glass p-1.5 flex items-center gap-1 overflow-x-auto">
@@ -335,23 +333,23 @@
                 <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
                     <div class="glass p-4">
                         <div class="text-xs text-zinc-400">Initial Rows</div>
-                        <div id="a1InitialRows" class="text-2xl font-bold mono text-zinc-100 mt-1">--</div>
+                        <div id="a1InitialRows" class="text-2xl font-bold mono text-zinc-100 mt-1">0</div>
                     </div>
                     <div class="glass p-4">
                         <div class="text-xs text-zinc-400">Cleaned Rows</div>
-                        <div id="a1CleanedRows" class="text-2xl font-bold mono text-emerald-400 mt-1">--</div>
+                        <div id="a1CleanedRows" class="text-2xl font-bold mono text-emerald-400 mt-1">0</div>
                     </div>
                     <div class="glass p-4">
                         <div class="text-xs text-zinc-400">Total Cells Corrected</div>
-                        <div id="a1CellsFixed" class="text-2xl font-bold mono text-amber-400 mt-1">--</div>
+                        <div id="a1CellsFixed" class="text-2xl font-bold mono text-amber-400 mt-1">0</div>
                     </div>
                     <div class="glass p-4">
                         <div class="text-xs text-zinc-400">Total Poor Outcomes</div>
-                        <div id="a1PoorCount" class="text-2xl font-bold mono text-rose-400 mt-1">--</div>
+                        <div id="a1PoorCount" class="text-2xl font-bold mono text-rose-400 mt-1">0</div>
                     </div>
                     <div class="glass p-4">
                         <div class="text-xs text-zinc-400">Poor-Outcome Rate</div>
-                        <div id="a1PoorRate" class="text-2xl font-bold mono text-rose-300 mt-1">--</div>
+                        <div id="a1PoorRate" class="text-2xl font-bold mono text-rose-300 mt-1">0.00%</div>
                     </div>
                 </div>
 
@@ -369,7 +367,9 @@
                                     <th class="py-2.5 pl-4">How We Fixed It</th>
                                 </tr>
                             </thead>
-                            <tbody id="a1RulesBody" class="divide-y divide-zinc-800/60 text-zinc-300"></tbody>
+                            <tbody id="a1RulesBody" class="divide-y divide-zinc-800/60 text-zinc-300">
+                                <tr><td colspan="3" class="py-6 text-center text-zinc-500 font-mono text-xs">No dataset uploaded yet. Ingest CSV above to run forensic audit.</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -381,14 +381,16 @@
                             <thead class="text-xs uppercase text-zinc-400 border-b border-zinc-800">
                                 <tr>
                                     <th class="py-2.5 pr-3">Column</th>
-                                    <th class="py-2.5 px-3">Format / Typo</th>
+                                    <th class="py-2.5 px-3">Format Standardized</th>
                                     <th class="py-2.5 px-3">Out-of-Range</th>
-                                    <th class="py-2.5 px-3">CGPA / Solo Rule</th>
+                                    <th class="py-2.5 px-3">CGPA / Solo Swapped</th>
                                     <th class="py-2.5 px-3">Missing Imputed</th>
                                     <th class="py-2.5 pl-3 text-emerald-400">Total Corrected</th>
                                 </tr>
                             </thead>
-                            <tbody id="a1ColsBody" class="divide-y divide-zinc-800/60 mono text-zinc-300"></tbody>
+                            <tbody id="a1ColsBody" class="divide-y divide-zinc-800/60 mono text-zinc-300">
+                                <tr><td colspan="6" class="py-6 text-center text-zinc-500 font-sans text-xs">No column corrections yet.</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -402,42 +404,52 @@
                     <!-- Chart 1: Team Factor -->
                     <div class="glass p-5 space-y-3">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-sm font-bold text-zinc-100">Team Size vs. Poor Outcome Rate</h3>
+                            <h3 id="chart1Title" class="text-sm font-bold text-zinc-100">Team Academic Floor vs. Poor-Outcome Rate</h3>
                             <span class="text-xs mono text-zinc-400">Factor 1</span>
                         </div>
-                        <div id="chartTeamSize" class="h-64"></div>
-                        <p class="text-xs text-zinc-400">Solo groups and large 5-member teams experience elevated failure risks due to isolated workloads and coordination overhead.</p>
+                        <div id="chart1Plot" class="h-64"></div>
+                        <p id="chart1Insight" class="text-xs text-zinc-400">Awaiting cohort ingestion.</p>
                     </div>
 
-                    <!-- Chart 2: Academic Factor -->
+                    <!-- Chart 2: Supervisor Factor -->
                     <div class="glass p-5 space-y-3">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-sm font-bold text-zinc-100">Mid-Eval Score Bins vs. Failure Rate</h3>
+                            <h3 id="chart2Title" class="text-sm font-bold text-zinc-100">Supervisor Meetings vs. Failure Rate</h3>
                             <span class="text-xs mono text-zinc-400">Factor 2</span>
                         </div>
-                        <div id="chartMidEval" class="h-64"></div>
-                        <p class="text-xs text-zinc-400">Clear monotonic relationship: groups scoring below 60 on Mid-Evaluation require immediate academic triage.</p>
+                        <div id="chart2Plot" class="h-64"></div>
+                        <p id="chart2Insight" class="text-xs text-zinc-400">Awaiting cohort ingestion.</p>
                     </div>
 
-                    <!-- Chart 3: Supervisor Factor -->
+                    <!-- Chart 3: Context Factor -->
                     <div class="glass p-5 space-y-3">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-sm font-bold text-zinc-100">Supervisor Meetings (First 8 Weeks)</h3>
+                            <h3 id="chart3Title" class="text-sm font-bold text-zinc-100">Project Domain Type vs. Risk</h3>
                             <span class="text-xs mono text-zinc-400">Factor 3</span>
                         </div>
-                        <div id="chartMeetings" class="h-64"></div>
-                        <p class="text-xs text-zinc-400">Groups meeting their advisor fewer than 4 times in the first 8 weeks face more than double the cohort failure rate.</p>
+                        <div id="chart3Plot" class="h-64"></div>
+                        <p id="chart3Insight" class="text-xs text-zinc-400">Awaiting cohort ingestion.</p>
                     </div>
 
-                    <!-- Chart 4: Engagement Factor -->
+                    <!-- Chart 4: Engineered Feature - CGPA Gap -->
                     <div class="glass p-5 space-y-3">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-sm font-bold text-zinc-100">GitHub Commits (First 8 Weeks)</h3>
-                            <span class="text-xs mono text-zinc-400">Factor 4</span>
+                            <h3 id="chart4Title" class="text-sm font-bold text-zinc-100">Engineered Feature: CGPA Disparity Gap</h3>
+                            <span class="text-xs mono text-indigo-400">Engineered 1</span>
                         </div>
-                        <div id="chartCommits" class="h-64"></div>
-                        <p class="text-xs text-zinc-400">Low commit frequency early in semester serves as an objective digital footprint of stalled development.</p>
+                        <div id="chart4Plot" class="h-64"></div>
+                        <p id="chart4Insight" class="text-xs text-zinc-400">Awaiting cohort ingestion.</p>
                     </div>
+                </div>
+
+                <!-- Chart 5: Engineered Supervision Bandwidth -->
+                <div class="glass p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h3 id="chart5Title" class="text-sm font-bold text-zinc-100">Engineered Feature: Supervision Bandwidth (Meetings / Active Load)</h3>
+                        <span class="text-xs mono text-indigo-400">Engineered 2</span>
+                    </div>
+                    <div id="chart5Plot" class="h-64"></div>
+                    <p id="chart5Insight" class="text-xs text-zinc-400">Awaiting cohort ingestion.</p>
                 </div>
 
                 <!-- Leakage Guardrail Card -->
@@ -448,7 +460,7 @@
                     </div>
                     <div class="text-xs text-zinc-400 leading-relaxed space-y-1">
                         <p>All features post-dating Week 8 (<code class="mono text-zinc-200">final_defense_score</code>, <code class="mono text-zinc-200">extension_grant</code>) were explicitly purged before training.</p>
-                        <p>Dates were transformed into cyclical month features (<code class="mono text-zinc-200">sin</code>/<code class="mono text-zinc-200">cos</code>) to avoid memorizing historical calendars.</p>
+                        <p>Proposal dates are converted to cyclical seasonal trigonometric features (<code class="mono text-zinc-200">sin/cos</code>) preventing raw timestamp memorization.</p>
                     </div>
                 </div>
             </section>
@@ -461,9 +473,9 @@
                     <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-3">
                         <div>
                             <h3 class="text-sm font-bold text-zinc-100">Candidate Classifier Benchmarks (Stratified 5-Fold CV)</h3>
-                            <p class="text-xs text-zinc-400">Model selection strictly optimized on OOF ROC-AUC and Brier calibration score</p>
+                            <p class="text-xs text-zinc-400">Selection strictly optimized on Out-of-Fold ROC-AUC and Brier calibration score</p>
                         </div>
-                        <div id="selectedModelBadge" class="px-2.5 py-1 rounded-md text-xs font-mono font-medium badge-green"></div>
+                        <div id="selectedModelBadge" class="px-2.5 py-1 rounded-md text-xs font-mono font-medium badge-green">Awaiting Ingestion</div>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -475,34 +487,38 @@
                                     <th class="py-2.5 px-3">Test ROC-AUC</th>
                                     <th class="py-2.5 px-3">Test Recall</th>
                                     <th class="py-2.5 px-3">Test F1</th>
-                                    <th class="py-2.5 px-3">Brier Score (Calibrated)</th>
+                                    <th class="py-2.5 px-3">Brier Score</th>
                                     <th class="py-2.5 pl-3">Status</th>
                                 </tr>
                             </thead>
-                            <tbody id="a3ArenaBody" class="divide-y divide-zinc-800/60 mono text-zinc-300"></tbody>
+                            <tbody id="a3ArenaBody" class="divide-y divide-zinc-800/60 mono text-zinc-300">
+                                <tr><td class="py-2.5 pr-3 font-sans text-zinc-400">Logistic Regression (L2)</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0%</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0000</td><td class="py-2.5 pl-3 text-zinc-500">Pending Data</td></tr>
+                                <tr><td class="py-2.5 pr-3 font-sans text-zinc-400">Random Forest (Balanced)</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0%</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0000</td><td class="py-2.5 pl-3 text-zinc-500">Pending Data</td></tr>
+                                <tr><td class="py-2.5 pr-3 font-sans text-zinc-400">HistGradientBoosting (Balanced)</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0%</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0000</td><td class="py-2.5 pl-3 text-zinc-500">Pending Data</td></tr>
+                                <tr><td class="py-2.5 pr-3 font-sans text-zinc-400">Calibrated Soft-Voting Ensemble</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0%</td><td class="py-2.5 px-3">0.000</td><td class="py-2.5 px-3">0.0000</td><td class="py-2.5 pl-3 text-zinc-500">Pending Data</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                    <!-- Calibration Curve -->
+                    <!-- Model Justification Card -->
                     <div class="glass p-5 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-sm font-bold text-zinc-100">Calibration Reliability Curve</h3>
-                            <span class="text-xs mono text-zinc-400">Platt Sigmoid Scaled</span>
-                        </div>
-                        <div id="chartCalibration" class="h-64"></div>
-                        <p class="text-xs text-zinc-400">Predicted probabilities closely align with the empirical 45° diagonal, validating trustworthy risk percentages.</p>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-300">Model Selection Justification</h4>
+                        <p id="a3JustificationText" class="text-xs text-zinc-400 leading-relaxed">
+                            Upload a cohort dataset to execute 5-Fold Stratified Cross-Validation across Logistic Regression, Random Forest, Histogram Gradient Boosting, and Platt-Calibrated Soft-Voting.
+                        </p>
                     </div>
 
                     <!-- Cost Matrix / Decision Threshold -->
                     <div class="glass p-5 space-y-3">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-sm font-bold text-zinc-100">Optimal Decision Threshold</h3>
-                            <span id="optimalThreshBadge" class="text-xs mono text-zinc-300"></span>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-300">Cost-Optimal Decision Threshold</h4>
+                            <span id="optimalThreshBadge" class="text-xs mono text-zinc-300">Awaiting Ingestion</span>
                         </div>
-                        <div id="chartThresholds" class="h-64"></div>
-                        <p class="text-xs text-zinc-400">Optimized to maximize recall of at-risk students while keeping false alarms within coordinator capacity.</p>
+                        <p class="text-xs text-zinc-400 leading-relaxed">
+                            The decision boundary balances early detection recall against coordinator intervention fatigue on out-of-fold validation splits.
+                        </p>
                     </div>
                 </div>
             </section>
@@ -533,7 +549,7 @@
                         <form id="predictForm" class="grid grid-cols-2 gap-3 text-xs">
                             <div>
                                 <label class="text-zinc-400 block mb-1">Proposal Date</label>
-                                <input type="date" name="proposal_date" class="input-glass" />
+                                <input type="date" name="proposal_date" value="2023-09-09" class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Campus</label>
@@ -557,43 +573,43 @@
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Group Size (1–5)</label>
-                                <input type="number" name="group_size" min="1" max="5" step="1" class="input-glass" />
+                                <input type="number" name="group_size" min="1" max="5" step="1" value="3" class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Mid-Eval Score (0–100)</label>
-                                <input type="number" name="mid_eval_score" min="0" max="100" step="0.5" class="input-glass" />
+                                <input type="number" name="mid_eval_score" min="0" max="100" step="0.5" value="70" class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Team Avg CGPA (0–4)</label>
-                                <input type="number" name="team_avg_cgpa" min="0" max="4" step="0.01" class="input-glass" />
+                                <input type="number" name="team_avg_cgpa" min="0" max="4" step="0.01" value="3.0" class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Team Min CGPA (≤ Avg)</label>
-                                <input type="number" name="team_min_cgpa" min="0" max="4" step="0.01" class="input-glass" />
+                                <input type="number" name="team_min_cgpa" min="0" max="4" step="0.01" value="2.8" class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Supervisor Exp (0–45 yrs)</label>
-                                <input type="number" name="supervisor_experience_years" min="0" max="45" step="1" class="input-glass" />
+                                <input type="number" name="supervisor_experience_years" min="0" max="45" step="1" value="8" class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Supervisor Active Groups (1–15)</label>
-                                <input type="number" name="supervisor_active_groups" min="1" max="15" step="1" class="input-glass" />
+                                <input type="number" name="supervisor_active_groups" min="1" max="15" step="1" value="4" class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Proposal Revisions (0–10)</label>
-                                <input type="number" name="proposal_revisions" min="0" max="10" step="1" class="input-glass" />
+                                <input type="number" name="proposal_revisions" min="0" max="10" step="1" value="1" class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Weeks to Approval (0–30)</label>
-                                <input type="number" name="weeks_to_proposal_approval" min="0" max="30" step="1" class="input-glass" />
+                                <input type="number" name="weeks_to_proposal_approval" min="0" max="30" step="1" value="3" class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">Supervisor Meetings 8wk (0–30)</label>
-                                <input type="number" name="supervisor_meetings_8wk" min="0" max="30" step="1" class="input-glass" />
+                                <input type="number" name="supervisor_meetings_8wk" min="0" max="30" step="1" value="6" class="input-glass" />
                             </div>
                             <div>
                                 <label class="text-zinc-400 block mb-1">GitHub Commits 8wk (0–1000)</label>
-                                <input type="number" name="github_commits_8wk" min="0" max="1000" step="1" class="input-glass" />
+                                <input type="number" name="github_commits_8wk" min="0" max="1000" step="1" value="60" class="input-glass" />
                             </div>
 
                             <div class="col-span-2 pt-2 flex gap-3">
@@ -615,13 +631,12 @@
                             <div class="flex items-start justify-between gap-3">
                                 <div>
                                     <div class="text-xs mono uppercase tracking-wider text-zinc-400">Estimated Failure Risk</div>
-                                    <div id="predProbText" class="text-4xl font-extrabold mono text-zinc-100 mt-1">--%</div>
+                                    <div id="predProbText" class="text-4xl font-extrabold mono text-zinc-100 mt-1">0.0%</div>
                                 </div>
                                 <div class="text-right space-y-1.5">
                                     <span id="predTierBadge"
-                                        class="inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider badge-green">--
-                                        RISK</span>
-                                    <div id="predOutcomeText" class="text-xs font-medium text-zinc-300">--</div>
+                                        class="inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider badge-green">LOW RISK</span>
+                                    <div id="predOutcomeText" class="text-xs font-medium text-zinc-400">Awaiting Model Fit</div>
                                 </div>
                             </div>
 
@@ -633,13 +648,15 @@
                             </div>
 
                             <!-- Plain-English Explanation -->
-                            <p id="predPlainExpl" class="text-xs text-zinc-300 leading-relaxed"></p>
+                            <p id="predPlainExpl" class="text-xs text-zinc-400 leading-relaxed">
+                                Ingest a cohort dataset to calculate personalized risk attribution scores.
+                            </p>
 
                             <!-- Concrete Coordinator Action -->
                             <div class="p-3.5 rounded-lg bg-zinc-900 border border-zinc-800">
                                 <div class="text-[11px] mono uppercase tracking-wider text-zinc-400 font-bold mb-1">
                                     Recommended Coordinator Intervention</div>
-                                <p id="predSupportStep" class="text-xs text-zinc-100 font-medium"></p>
+                                <p id="predSupportStep" class="text-xs text-zinc-300 font-medium">Standard academic monitoring.</p>
                             </div>
                         </div>
 
@@ -649,7 +666,11 @@
                                 <h4 class="text-xs font-bold uppercase text-zinc-300 tracking-wider">Top Risk Drivers (Attribution)</h4>
                                 <span class="text-[11px] mono text-zinc-500">Red = Risk Increase · Green = Protective</span>
                             </div>
-                            <div id="predTop3Container" class="space-y-2.5"></div>
+                            <div id="predTop3Container" class="space-y-2.5">
+                                <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-zinc-500">
+                                    No attribution computed yet.
+                                </div>
+                            </div>
                         </div>
 
                         <!-- A4 Monotonicity Verification Panel -->
@@ -658,7 +679,26 @@
                                 <h4 class="text-xs font-bold uppercase text-zinc-300 tracking-wider">Risk Tier Calibration Proof (A4)</h4>
                                 <span id="a4MonoBadge" class="text-[11px] mono px-2 py-0.5 rounded-md badge-green">Strictly Monotonic ✓</span>
                             </div>
-                            <div id="a4TierProofGrid" class="grid grid-cols-3 gap-3"></div>
+                            <div id="a4TierProofGrid" class="grid grid-cols-3 gap-3">
+                                <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800">
+                                    <div class="text-[11px] mono uppercase text-zinc-400 font-semibold">Low Risk</div>
+                                    <div class="text-xs text-zinc-500 mt-0.5">&lt; 15%</div>
+                                    <div class="text-base font-extrabold mono text-zinc-300 mt-1.5">0.0%</div>
+                                    <div class="text-[10px] text-zinc-500">Observed failure rate (n=0)</div>
+                                </div>
+                                <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800">
+                                    <div class="text-[11px] mono uppercase text-zinc-400 font-semibold">Medium Risk</div>
+                                    <div class="text-xs text-zinc-500 mt-0.5">15%–40%</div>
+                                    <div class="text-base font-extrabold mono text-zinc-300 mt-1.5">0.0%</div>
+                                    <div class="text-[10px] text-zinc-500">Observed failure rate (n=0)</div>
+                                </div>
+                                <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800">
+                                    <div class="text-[11px] mono uppercase text-zinc-400 font-semibold">High Risk</div>
+                                    <div class="text-xs text-zinc-500 mt-0.5">≥ 40%</div>
+                                    <div class="text-base font-extrabold mono text-zinc-300 mt-1.5">0.0%</div>
+                                    <div class="text-[10px] text-zinc-500">Observed failure rate (n=0)</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -670,7 +710,9 @@
             <section id="tab-a5" class="tab-panel space-y-5">
                 <div class="glass p-5 border-zinc-800 bg-zinc-900/40">
                     <div class="text-xs mono uppercase tracking-wider text-zinc-400 mb-1">Fairness & Statistical Independence Audit</div>
-                    <p id="a5Takeaway" class="text-xs sm:text-sm text-zinc-200 font-medium leading-relaxed"></p>
+                    <p id="a5Takeaway" class="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">
+                        Awaiting cohort ingestion to run two-proportion Z-test across Leader Gender and campuses with ≥30 test groups.
+                    </p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -678,9 +720,8 @@
                     <div class="glass p-5 space-y-4">
                         <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-3">
                             <h3 class="text-sm font-bold text-zinc-100">Leader Gender Audit (Test Split)</h3>
-                            <span id="a5GenderPval" class="text-xs mono text-zinc-400"></span>
+                            <span id="a5GenderPval" class="text-xs mono text-zinc-400">p-value: 0.0000</span>
                         </div>
-                        <div id="chartFairGender" class="h-60"></div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs mono">
                                 <thead class="text-xs uppercase text-zinc-400 border-b border-zinc-800">
@@ -691,7 +732,10 @@
                                         <th class="py-2">Recall (95% CI)</th>
                                     </tr>
                                 </thead>
-                                <tbody id="a5GenderBody" class="divide-y divide-zinc-800/60 text-zinc-200"></tbody>
+                                <tbody id="a5GenderBody" class="divide-y divide-zinc-800/60 text-zinc-200">
+                                    <tr><td class="py-2 font-sans font-medium text-zinc-300">Male Leader</td><td class="py-2">0</td><td class="py-2">0.0%</td><td class="py-2">0.0%</td></tr>
+                                    <tr><td class="py-2 font-sans font-medium text-zinc-300">Female Leader</td><td class="py-2">0</td><td class="py-2">0.0%</td><td class="py-2">0.0%</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -700,9 +744,8 @@
                     <div class="glass p-5 space-y-4">
                         <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-3">
                             <h3 class="text-sm font-bold text-zinc-100">Campus Audit (≥ 30 Test Groups)</h3>
-                            <span id="a5CampusGapBadge" class="text-xs mono px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/25"></span>
+                            <span id="a5CampusGapBadge" class="text-xs mono px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400 border border-zinc-700">Awaiting Data</span>
                         </div>
-                        <div id="chartFairCampus" class="h-60"></div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs mono">
                                 <thead class="text-xs uppercase text-zinc-400 border-b border-zinc-800">
@@ -714,7 +757,9 @@
                                         <th class="py-2">Recall</th>
                                     </tr>
                                 </thead>
-                                <tbody id="a5CampusBody" class="divide-y divide-zinc-800/60 text-zinc-200"></tbody>
+                                <tbody id="a5CampusBody" class="divide-y divide-zinc-800/60 text-zinc-200">
+                                    <tr><td colspan="5" class="py-4 text-center text-zinc-500 font-sans">No campus records loaded.</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -736,7 +781,7 @@
                             <span>10 groups</span><span>50 groups</span><span>100 groups</span>
                         </div>
                     </div>
-                    <a id="btnDownloadWatchlist" href="/api/watchlist/download?k=30"
+                    <a id="btnDownloadWatchlist" href="#"
                         class="px-4 py-2 rounded-lg bg-zinc-100 hover:bg-white text-zinc-950 font-semibold text-xs transition shadow-sm">
                         ↓ Export Watchlist (.csv)
                     </a>
@@ -745,22 +790,22 @@
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
                     <div class="glass p-4">
                         <div class="text-xs text-zinc-400">At-Risk Captured</div>
-                        <div id="a6Captured" class="text-2xl font-bold mono text-emerald-400 mt-1">--</div>
-                        <div id="a6RecallK" class="text-xs text-zinc-400 mt-0.5">--</div>
+                        <div id="a6Captured" class="text-2xl font-bold mono text-emerald-400 mt-1">0 / 0</div>
+                        <div id="a6RecallK" class="text-xs text-zinc-400 mt-0.5">0.0% of cohort poor outcomes</div>
                     </div>
                     <div class="glass p-4">
                         <div class="text-xs text-zinc-400">Precision @ K</div>
-                        <div id="a6PrecisionK" class="text-2xl font-bold mono text-zinc-100 mt-1">--</div>
+                        <div id="a6PrecisionK" class="text-2xl font-bold mono text-zinc-100 mt-1">0.0%</div>
                         <div class="text-xs text-zinc-500 mt-0.5">Hit rate among K flagged</div>
                     </div>
                     <div class="glass p-4">
                         <div class="text-xs text-zinc-400">Expected by Random Pick</div>
-                        <div id="a6RandomExp" class="text-2xl font-bold mono text-zinc-400 mt-1">--</div>
+                        <div id="a6RandomExp" class="text-2xl font-bold mono text-zinc-400 mt-1">0.0 groups</div>
                         <div class="text-xs text-zinc-500 mt-0.5">Baseline without AI</div>
                     </div>
                     <div class="glass p-4">
                         <div class="text-xs text-zinc-400">AI Targeting Lift</div>
-                        <div id="a6Lift" class="text-2xl font-bold mono text-indigo-400 mt-1">--×</div>
+                        <div id="a6Lift" class="text-2xl font-bold mono text-indigo-400 mt-1">0.00×</div>
                         <div class="text-xs text-zinc-500 mt-0.5">Efficiency multiplier</div>
                     </div>
                 </div>
@@ -779,7 +824,9 @@
                                     <th class="py-2.5 px-2">Actual Outcome</th>
                                 </tr>
                             </thead>
-                            <tbody id="a6TableBody" class="divide-y divide-zinc-800/60"></tbody>
+                            <tbody id="a6TableBody" class="divide-y divide-zinc-800/60">
+                                <tr><td colspan="6" class="py-8 text-center text-zinc-500 font-sans text-xs">No groups queued. Ingest dataset to compute top-K intervention list.</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -829,24 +876,24 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div class="glass p-5 space-y-2">
                                 <div class="text-[11px] mono uppercase text-zinc-400">Before (Baseline)</div>
-                                <div id="wiBeforeProb" class="text-3xl font-extrabold mono text-zinc-100">--%</div>
+                                <div id="wiBeforeProb" class="text-3xl font-extrabold mono text-zinc-100">0.0%</div>
                                 <span id="wiBeforeTier"
-                                    class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold uppercase">--</span>
+                                    class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold uppercase badge-green">LOW RISK</span>
                             </div>
                             <div id="wiAfterCard" class="glass p-5 space-y-2 transition-all duration-300">
                                 <div class="text-[11px] mono uppercase text-indigo-400">After Intervention</div>
                                 <div class="flex items-baseline gap-2">
-                                    <div id="wiAfterProb" class="text-3xl font-extrabold mono text-zinc-100">--%</div>
-                                    <span id="wiDeltaText" class="text-xs font-bold mono"></span>
+                                    <div id="wiAfterProb" class="text-3xl font-extrabold mono text-zinc-100">0.0%</div>
+                                    <span id="wiDeltaText" class="text-xs font-bold mono text-zinc-500">(0.0 pp)</span>
                                 </div>
                                 <span id="wiAfterTier"
-                                    class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold uppercase">--</span>
+                                    class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold uppercase badge-green">LOW RISK</span>
                             </div>
                         </div>
 
                         <div class="glass p-5 space-y-2">
                             <div class="text-xs mono uppercase text-zinc-400">Updated Action Recommendation</div>
-                            <p id="wiAfterAction" class="text-xs text-zinc-200 leading-relaxed"></p>
+                            <p id="wiAfterAction" class="text-xs text-zinc-300 leading-relaxed">Adjust levers on the left to simulate coordinator interventions.</p>
                         </div>
 
                         <!-- Best Lever Output Card -->
@@ -869,41 +916,37 @@
 
     <script>
         // =========================================================================
-        // 1. STATE & THEME CONFIGURATION (Linear Minimalist Dark)
+        // 1. STATE CONFIGURATION
         // =========================================================================
         let APP_DATA = null;
         let CURRENT_BASELINE = {};
         let LAST_BEST_LEVER = null;
 
-        function setThreePulseColor(tier) {
-            // Minimalist no-op (3D globe removed in professional theme)
-        }
-
-        function initTiltCard() {
-            // Clean subtle hover state
-        }
-
         // =========================================================================
         // 2. HELPER FUNCTIONS
         // =========================================================================
         function showLoading(text) {
-            document.getElementById('loadingText').textContent = text;
-            document.getElementById('loadingOverlay').classList.remove('hidden');
+            const el = document.getElementById('loadingText');
+            if (el) el.textContent = text;
+            const ov = document.getElementById('loadingOverlay');
+            if (ov) ov.classList.remove('hidden');
         }
 
         function hideLoading() {
-            document.getElementById('loadingOverlay').classList.add('hidden');
+            const ov = document.getElementById('loadingOverlay');
+            if (ov) ov.classList.add('hidden');
         }
 
         function animateNumber(elId, target, decimals = 0, duration = 400, suffix = '') {
             const el = document.getElementById(elId);
             if (!el) return;
+            const targetVal = Number(target) || 0;
             const start = 0;
             const startTime = performance.now();
             function step(now) {
                 const p = Math.min(1, (now - startTime) / duration);
                 const eased = 1 - Math.pow(1 - p, 3);
-                const val = start + (target - start) * eased;
+                const val = start + (targetVal - start) * eased;
                 el.textContent = val.toFixed(decimals) + suffix;
                 if (p < 1) requestAnimationFrame(step);
             }
@@ -926,198 +969,309 @@
         };
 
         function renderBarChart(elId, data, colorHex) {
+            const container = document.getElementById(elId);
+            if (!container || !data || !data.labels) return;
             const trace = {
                 x: data.labels,
                 y: data.rates,
                 type: 'bar',
-                text: data.rates.map((r, i) => `${r}%<br>(n=${data.counts[i]})`),
+                text: data.rates.map((r, i) => `${r}%<br>(n=${data.counts[i] || 0})`),
                 textposition: 'auto',
                 marker: {
-                    color: data.rates.map((r) => r >= 25 ? '#f43f5e' : r >= 15 ? '#f59e0b' : '#6366f1'),
+                    color: data.rates.map((r) => r >= 25 ? '#f43f5e' : r >= 15 ? '#f59e0b' : colorHex),
                     line: { color: 'rgba(255,255,255,0.1)', width: 1 },
                 },
                 hovertemplate: '<b>%{x}</b><br>Poor-Outcome Rate: %{y}%<extra></extra>',
             };
             Plotly.newPlot(elId, [trace], {
                 ...PLOTLY_DARK,
-                xaxis: { ...PLOTLY_DARK.xaxis, title: data.x_label },
+                xaxis: { ...PLOTLY_DARK.xaxis, title: data.x_label || '' },
             }, { responsive: true, displayModeBar: false });
         }
 
         // =========================================================================
-        // 3. RENDER ALL SECTIONS (A1 - A7)
+        // 3. ZERO STATE
+        // =========================================================================
+        function renderZeroState() {
+            // Header KPIs at zero
+            const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+            setTxt('heroCleanedRows', '0');
+            setTxt('heroRemovedRows', '0 excluded');
+            setTxt('heroPoorRate', '0.0%');
+            setTxt('heroPoorCount', '0 of 0 total');
+            setTxt('heroRocAuc', '0.000');
+            setTxt('heroModelShort', 'Awaiting Model Fit');
+            setTxt('heroRecall', '0.0%');
+            setTxt('heroVsDummy', 'vs 0% dummy baseline');
+
+            // Tab A1
+            setTxt('a1InitialRows', '0');
+            setTxt('a1CleanedRows', '0');
+            setTxt('a1CellsFixed', '0');
+            setTxt('a1PoorCount', '0');
+            setTxt('a1PoorRate', '0.00%');
+
+            // Tab A4 Predictor zero state
+            setTxt('predProbText', '0.0%');
+            const pBar = document.getElementById('predProbBar');
+            if (pBar) {
+                pBar.style.width = '0%';
+                pBar.className = 'h-full rounded-full transition-all duration-500 bg-zinc-600';
+            }
+            const bTier = document.getElementById('predTierBadge');
+            if (bTier) {
+                bTier.textContent = 'NO DATA';
+                bTier.className = 'inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-zinc-800 text-zinc-400 border border-zinc-700/60';
+            }
+            setTxt('predOutcomeText', 'Awaiting Dataset Upload');
+            setTxt('predPlainExpl', 'Upload a dataset to run live inference and model explanations.');
+            setTxt('predSupportStep', 'Intervention playbook will be generated based on top risk drivers.');
+            const top3Container = document.getElementById('predTop3Container');
+            if (top3Container) {
+                top3Container.innerHTML = '<div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-zinc-500">No attribution computed yet. Upload a CSV to view feature attributions.</div>';
+            }
+
+            // Tab A6 Watchlist zero state
+            setTxt('a6Captured', '0 / 0');
+            setTxt('a6RecallK', '0.0% of cohort poor outcomes');
+            setTxt('a6PrecisionK', '0.0%');
+            setTxt('a6RandomExp', '0.0 groups');
+            setTxt('a6Lift', '0.00×');
+            const tbody = document.getElementById('a6TableBody');
+            if (tbody) {
+                tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-zinc-500 text-xs">No groups queued. Ingest dataset to compute top-K intervention list.</td></tr>';
+            }
+
+            // Tab A7 What-If zero state
+            setTxt('wiBeforeProb', '0.0%');
+            setTxt('wiAfterProb', '0.0%');
+            setTxt('wiDeltaText', '(0.0 pp)');
+
+            const defaultOptions = {
+                campus: ["Lahore", "Karachi", "Islamabad", "Faisalabad", "Multan", "Rawalpindi", "Peshawar", "Quetta"],
+                program: ["BSCS", "BSSE", "BSAI", "BSIT", "BSDS"],
+                leader_gender: ["Male", "Female"],
+                project_type: ["Web App", "Mobile App", "AI-ML", "IoT", "Research"],
+                has_industry_sponsor: ["Yes", "No"]
+            };
+            populatePredictForm({}, defaultOptions);
+
+            const zeroData = { labels: ["Cat 1", "Cat 2", "Cat 3"], rates: [0, 0, 0], counts: [0, 0, 0], x_label: "Awaiting Cohort" };
+            renderBarChart('chart1Plot', zeroData, '#6366f1');
+            renderBarChart('chart2Plot', zeroData, '#6366f1');
+            renderBarChart('chart3Plot', zeroData, '#6366f1');
+            renderBarChart('chart4Plot', zeroData, '#6366f1');
+            renderBarChart('chart5Plot', zeroData, '#6366f1');
+
+            initWhatIfControls({
+                supervisor_meetings_8wk: 6,
+                github_commits_8wk: 60,
+                weeks_to_proposal_approval: 3,
+                proposal_revisions: 1,
+                mid_eval_score: 70
+            });
+        }
+
+        // =========================================================================
+        // 4. RENDER ALL SECTIONS
         // =========================================================================
         function renderAll(data) {
             APP_DATA = data;
-            document.getElementById('emptyStateBanner').classList.add('hidden');
-            document.getElementById('workspace').classList.remove('hidden');
+            const banner = document.getElementById('emptyStateBanner');
+            if (banner) banner.classList.add('hidden');
 
-            const a1 = data.a1_cleaning;
-            const a3 = data.a3_models;
-            const bestM = a3.models.find((m) => m.name === a3.selected_model);
+            const a1 = data.a1_cleaning || {};
+            const a3 = data.a3_models || {};
+            const models = a3.models || [];
+            const bestM = models.find((m) => m.name === a3.selected_model) || models[0] || {};
 
-            // Header & Hero KPIs
-            document.getElementById('datasetNameLabel').textContent = `${a1.source_name} (${a1.cleaned_rows} rows)`;
-            document.getElementById('datasetStatusBadge').classList.remove('hidden');
-            animateNumber('heroCleanedRows', a1.cleaned_rows);
-            document.getElementById('heroRemovedRows').textContent = `${a1.rows_removed} excluded`;
-            animateNumber('heroPoorRate', a1.poor_outcome_rate * 100, 1, 400, '%');
-            document.getElementById('heroPoorCount').textContent = `${a1.total_poor_outcomes} of ${a1.cleaned_rows} total`;
-            if (bestM) {
-                animateNumber('heroRocAuc', bestM.test_roc_auc, 3);
-                document.getElementById('heroModelShort').textContent = bestM.name;
-                animateNumber('heroRecall', bestM.test_recall * 100, 1, 400, '%');
-                document.getElementById('heroVsDummy').textContent = `vs 0% dummy baseline`;
+            // Header Status
+            try {
+                const lbl = document.getElementById('datasetNameLabel');
+                if (lbl) {
+                    lbl.textContent = `${a1.source_name || 'dataset.csv'} (${a1.cleaned_rows || 0} rows)`;
+                    lbl.className = 'text-zinc-200';
+                }
+                const dot = document.getElementById('datasetStatusDot');
+                if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                const badge = document.getElementById('datasetStatusBadge');
+                if (badge) badge.classList.remove('hidden');
+
+                const pDot = document.getElementById('pipelineStatusDot');
+                if (pDot) pDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+                const pTxt = document.getElementById('pipelineStatusText');
+                if (pTxt) pTxt.textContent = 'Live Checkpoint Active';
+                const pBadge = document.getElementById('pipelineStatusBadge');
+                if (pBadge) pBadge.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+
+                // Animated Header KPIs
+                animateNumber('heroCleanedRows', a1.cleaned_rows || 0);
+                const remEl = document.getElementById('heroRemovedRows');
+                if (remEl) remEl.textContent = `${a1.rows_removed || 0} excluded`;
+                animateNumber('heroPoorRate', (a1.poor_outcome_rate || 0) * 100, 1, 400, '%');
+                const cntEl = document.getElementById('heroPoorCount');
+                if (cntEl) cntEl.textContent = `${a1.total_poor_outcomes || 0} of ${a1.cleaned_rows || 0} total`;
+                
+                if (bestM.name) {
+                    animateNumber('heroRocAuc', bestM.roc_auc || 0, 3);
+                    const mShort = document.getElementById('heroModelShort');
+                    if (mShort) mShort.textContent = bestM.name;
+                    animateNumber('heroRecall', (bestM.recall || 0) * 100, 1, 400, '%');
+                    const vsDum = document.getElementById('heroVsDummy');
+                    if (vsDum) vsDum.textContent = `vs ${((a3.dummy_baseline_accuracy || 0.84) * 100).toFixed(0)}% dummy baseline`;
+                }
+            } catch (err) {
+                console.error('Header telemetry render error:', err);
             }
 
-            // ---------------------------------------------------------------------
-            // A1: Data Cleaning
-            // ---------------------------------------------------------------------
-            animateNumber('a1InitialRows', a1.initial_rows);
-            animateNumber('a1CleanedRows', a1.cleaned_rows);
-            animateNumber('a1CellsFixed', a1.total_cells_corrected);
-            animateNumber('a1PoorCount', a1.total_poor_outcomes);
-            animateNumber('a1PoorRate', a1.poor_outcome_rate * 100, 2, 400, '%');
+            // A1
+            try {
+                animateNumber('a1InitialRows', a1.initial_rows || 0);
+                animateNumber('a1CleanedRows', a1.cleaned_rows || 0);
+                animateNumber('a1CellsFixed', a1.total_cells_corrected || 0);
+                animateNumber('a1PoorCount', a1.total_poor_outcomes || 0);
+                animateNumber('a1PoorRate', (a1.poor_outcome_rate || 0) * 100, 2, 400, '%');
 
-            const rulesBody = document.getElementById('a1RulesBody');
-            rulesBody.innerHTML = a1.rule_violations.map((r) => `
-                <tr class="hover:bg-zinc-800/40 transition">
-                    <td class="py-2.5 pr-4 font-medium text-zinc-200">${r.rule}</td>
-                    <td class="py-2.5 px-4 mono ${r.violations_count > 0 ? 'text-amber-400 font-bold' : 'text-zinc-500'}">${r.violations_count}</td>
-                    <td class="py-2.5 pl-4 text-xs text-zinc-400">${r.remediation}</td>
-                </tr>
-            `).join('');
+                const rulesBody = document.getElementById('a1RulesBody');
+                if (rulesBody && a1.rule_violations) {
+                    rulesBody.innerHTML = a1.rule_violations.map((r) => `
+                        <tr class="hover:bg-zinc-800/40 transition">
+                            <td class="py-2.5 pr-4 font-medium text-zinc-200">${r.rule}</td>
+                            <td class="py-2.5 px-4 mono ${r.rows_broken > 0 ? 'text-amber-400 font-bold' : 'text-zinc-500'}">${r.rows_broken}</td>
+                            <td class="py-2.5 pl-4 text-xs text-zinc-400">${r.how_fixed}</td>
+                        </tr>
+                    `).join('');
+                }
 
-            const colsBody = document.getElementById('a1ColsBody');
-            colsBody.innerHTML = a1.corrections_per_column.map((c) => `
-                <tr class="hover:bg-zinc-800/40 transition">
-                    <td class="py-2 pr-3 font-sans font-medium text-zinc-200">${c.column}</td>
-                    <td class="py-2 px-3">${c.format_typos}</td>
-                    <td class="py-2 px-3">${c.out_of_range}</td>
-                    <td class="py-2 px-3">${c.logical_rule_swaps}</td>
-                    <td class="py-2 px-3">${c.missing_imputed}</td>
-                    <td class="py-2 pl-3 text-emerald-400 font-bold">${c.total_corrected}</td>
-                </tr>
-            `).join('');
+                const colsBody = document.getElementById('a1ColsBody');
+                if (colsBody && a1.corrections_per_column) {
+                    colsBody.innerHTML = a1.corrections_per_column.map((c) => `
+                        <tr class="hover:bg-zinc-800/40 transition">
+                            <td class="py-2 pr-3 font-sans font-medium text-zinc-200">${c.column}</td>
+                            <td class="py-2 px-3">${c.format_standardized}</td>
+                            <td class="py-2 px-3">${c.out_of_range}</td>
+                            <td class="py-2 px-3">${c.rule_fixed}</td>
+                            <td class="py-2 px-3">${c.missing_imputed}</td>
+                            <td class="py-2 pl-3 text-emerald-400 font-bold">${c.total_corrected}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('A1 render error:', err);
+            }
 
-            // ---------------------------------------------------------------------
-            // A2: Insights Charts
-            // ---------------------------------------------------------------------
-            const a2 = data.a2_charts;
-            renderBarChart('chartTeamSize', a2.group_size, '#6366f1');
-            renderBarChart('chartMidEval', a2.mid_eval, '#f59e0b');
-            renderBarChart('chartMeetings', a2.supervisor_meetings, '#10b981');
-            renderBarChart('chartCommits', a2.github_commits, '#38bdf8');
+            // A2
+            try {
+                const a2 = data.a2_dashboards || {};
+                if (a2.team_factor) {
+                    const elT = document.getElementById('chart1Title'); if (elT) elT.textContent = a2.team_factor.title;
+                    const elI = document.getElementById('chart1Insight'); if (elI) elI.textContent = a2.team_factor.insight;
+                    renderBarChart('chart1Plot', a2.team_factor, '#6366f1');
+                }
+                if (a2.supervisor_factor) {
+                    const elT = document.getElementById('chart2Title'); if (elT) elT.textContent = a2.supervisor_factor.title;
+                    const elI = document.getElementById('chart2Insight'); if (elI) elI.textContent = a2.supervisor_factor.insight;
+                    renderBarChart('chart2Plot', a2.supervisor_factor, '#10b981');
+                }
+                if (a2.context_factor) {
+                    const elT = document.getElementById('chart3Title'); if (elT) elT.textContent = a2.context_factor.title;
+                    const elI = document.getElementById('chart3Insight'); if (elI) elI.textContent = a2.context_factor.insight;
+                    renderBarChart('chart3Plot', a2.context_factor, '#f59e0b');
+                }
+                if (a2.engineered_cgpa_gap) {
+                    const elT = document.getElementById('chart4Title'); if (elT) elT.textContent = a2.engineered_cgpa_gap.title;
+                    const elI = document.getElementById('chart4Insight'); if (elI) elI.textContent = a2.engineered_cgpa_gap.insight;
+                    renderBarChart('chart4Plot', a2.engineered_cgpa_gap, '#818cf8');
+                }
+                if (a2.engineered_bandwidth) {
+                    const elT = document.getElementById('chart5Title'); if (elT) elT.textContent = a2.engineered_bandwidth.title;
+                    const elI = document.getElementById('chart5Insight'); if (elI) elI.textContent = a2.engineered_bandwidth.insight;
+                    renderBarChart('chart5Plot', a2.engineered_bandwidth, '#38bdf8');
+                }
+            } catch (err) {
+                console.error('A2 render error:', err);
+            }
 
-            // ---------------------------------------------------------------------
-            // A3: Model Arena
-            // ---------------------------------------------------------------------
-            document.getElementById('selectedModelBadge').textContent = `Best Selected: ${a3.selected_model}`;
-            const arenaBody = document.getElementById('a3ArenaBody');
-            arenaBody.innerHTML = a3.models.map((m) => {
-                const isWinner = m.name === a3.selected_model;
-                return `
-                <tr class="${isWinner ? 'bg-zinc-800/60 font-semibold' : 'hover:bg-zinc-800/30'} transition">
-                    <td class="py-2.5 pr-3 font-sans text-zinc-100 flex items-center gap-2">
-                        ${isWinner ? '<span class="text-emerald-400">★</span>' : ''}
-                        ${m.name}
-                    </td>
-                    <td class="py-2.5 px-3 text-zinc-300">${m.cv_roc_auc_mean.toFixed(3)} ± ${m.cv_roc_auc_std.toFixed(3)}</td>
-                    <td class="py-2.5 px-3 ${isWinner ? 'text-indigo-400 font-bold' : 'text-zinc-200'}">${m.test_roc_auc.toFixed(3)}</td>
-                    <td class="py-2.5 px-3 text-emerald-400 font-bold">${(m.test_recall * 100).toFixed(1)}%</td>
-                    <td class="py-2.5 px-3">${m.test_f1.toFixed(3)}</td>
-                    <td class="py-2.5 px-3">${m.test_brier.toFixed(4)}</td>
-                    <td class="py-2.5 pl-3">
-                        ${isWinner
-                        ? '<span class="text-[10px] px-2 py-0.5 rounded badge-green">Production Winner</span>'
-                        : '<span class="text-zinc-500 text-xs">Evaluated</span>'}
-                    </td>
-                </tr>
-            `;
-            }).join('');
+            // A3
+            try {
+                const sBadge = document.getElementById('selectedModelBadge');
+                if (sBadge) sBadge.textContent = `Best: ${a3.selected_model || 'Model'}`;
+                const jTxt = document.getElementById('a3JustificationText');
+                if (jTxt) jTxt.textContent = a3.justification || '';
+                const oBadge = document.getElementById('optimalThreshBadge');
+                if (oBadge && a3.selected_threshold !== undefined) oBadge.textContent = `Threshold: ${a3.selected_threshold.toFixed(2)}`;
 
-            // Calibration reliability curve
-            const cal = a3.calibration_curve;
-            Plotly.newPlot('chartCalibration', [
-                {
-                    x: [0, 1], y: [0, 1], mode: 'lines',
-                    line: { dash: 'dash', color: 'rgba(255,255,255,0.3)', width: 1.5 },
-                    name: 'Perfect Calibration',
-                },
-                {
-                    x: cal.prob_pred, y: cal.prob_true, mode: 'lines+markers',
-                    line: { color: '#6366f1', width: 2.5 },
-                    marker: { size: 7, color: '#818cf8' },
-                    name: a3.selected_model,
-                },
-            ], {
-                ...PLOTLY_DARK,
-                xaxis: { ...PLOTLY_DARK.xaxis, title: 'Mean Predicted Probability' },
-                yaxis: { ...PLOTLY_DARK.yaxis, title: 'Fraction of Positives' },
-                legend: { orientation: 'h', y: 1.15 },
-            }, { responsive: true, displayModeBar: false });
+                const arenaBody = document.getElementById('a3ArenaBody');
+                if (arenaBody && models.length) {
+                    arenaBody.innerHTML = models.map((m) => {
+                        const isWinner = m.name === a3.selected_model;
+                        return `
+                        <tr class="${isWinner ? 'bg-zinc-800/60 font-semibold' : 'hover:bg-zinc-800/30'} transition">
+                            <td class="py-2.5 pr-3 font-sans text-zinc-100 flex items-center gap-2">
+                                ${isWinner ? '<span class="text-emerald-400">★</span>' : ''}
+                                ${m.name}
+                            </td>
+                            <td class="py-2.5 px-3 text-zinc-300">${(m.cv_roc_auc || 0).toFixed(3)}</td>
+                            <td class="py-2.5 px-3 ${isWinner ? 'text-indigo-400 font-bold' : 'text-zinc-200'}">${(m.roc_auc || 0).toFixed(3)}</td>
+                            <td class="py-2.5 px-3 text-emerald-400 font-bold">${((m.recall || 0) * 100).toFixed(1)}%</td>
+                            <td class="py-2.5 px-3">${(m.f1 || 0).toFixed(3)}</td>
+                            <td class="py-2.5 px-3">${(m.brier_score || 0).toFixed(4)}</td>
+                            <td class="py-2.5 pl-3">
+                                ${isWinner
+                                ? '<span class="text-[10px] px-2 py-0.5 rounded badge-green">Production Winner</span>'
+                                : '<span class="text-zinc-500 text-xs">Evaluated</span>'}
+                            </td>
+                        </tr>
+                    `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.error('A3 render error:', err);
+            }
 
-            // Optimal threshold tradeoff curve
-            const th = a3.threshold_curve;
-            document.getElementById('optimalThreshBadge').textContent = `Cost-Optimal Threshold = ${a3.optimal_threshold.toFixed(2)}`;
-            Plotly.newPlot('chartThresholds', [
-                {
-                    x: th.thresholds, y: th.recalls.map((v) => +(v * 100).toFixed(1)),
-                    mode: 'lines', line: { color: '#10b981', width: 2 }, name: 'Recall (%)',
-                },
-                {
-                    x: th.thresholds, y: th.precisions.map((v) => +(v * 100).toFixed(1)),
-                    mode: 'lines', line: { color: '#6366f1', width: 2 }, name: 'Precision (%)',
-                },
-                {
-                    x: th.thresholds, y: th.f1s.map((v) => +(v * 100).toFixed(1)),
-                    mode: 'lines', line: { color: '#f59e0b', width: 2 }, name: 'F1-Score (%)',
-                },
-            ], {
-                ...PLOTLY_DARK,
-                xaxis: { ...PLOTLY_DARK.xaxis, title: 'Decision Threshold' },
-                yaxis: { ...PLOTLY_DARK.yaxis, title: 'Score (%)' },
-                shapes: [{
-                    type: 'line',
-                    x0: a3.optimal_threshold, x1: a3.optimal_threshold,
-                    y0: 0, y1: 100,
-                    line: { color: '#f43f5e', width: 1.5, dash: 'dot' },
-                }],
-                legend: { orientation: 'h', y: 1.15 },
-            }, { responsive: true, displayModeBar: false });
+            // A4
+            try {
+                populatePredictForm(data.default_form || {}, data.valid_options || {});
+                runPredictionOnForm();
 
-            // ---------------------------------------------------------------------
-            // A4: Populate Profiler Form & Predict
-            // ---------------------------------------------------------------------
-            populatePredictForm(data.default_form, data.form_options);
-            runPredictionOnForm();
+                const pf = data.a4_tiers || {};
+                const mBadge = document.getElementById('a4MonoBadge');
+                if (mBadge) mBadge.textContent = pf.is_strictly_monotonic ? 'Strictly Monotonic ✓' : 'Non-Monotonic ⚠';
+                const pfGrid = document.getElementById('a4TierProofGrid');
+                if (pfGrid && pf.test_tier_rates) {
+                    pfGrid.innerHTML = pf.test_tier_rates.map((t) => `
+                        <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800">
+                            <div class="text-[11px] mono uppercase text-zinc-400 font-semibold">${t.tier} Risk</div>
+                            <div class="text-xs text-zinc-500 mt-0.5">${t.rule}</div>
+                            <div class="text-base font-extrabold mono text-zinc-100 mt-1.5">${((t.observed_poor_rate || 0) * 100).toFixed(1)}%</div>
+                            <div class="text-[10px] text-zinc-400">Observed failure rate (n=${t.test_groups || 0})</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('A4 render error:', err);
+            }
 
-            // Calibration monotonic proof
-            const pf = a3.calibration_proof;
-            document.getElementById('a4MonoBadge').textContent = pf.strictly_monotonic ? 'Strictly Monotonic ✓' : 'Non-Monotonic ⚠';
-            document.getElementById('a4TierProofGrid').innerHTML = pf.tiers.map((t) => `
-                <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800">
-                    <div class="text-[11px] mono uppercase text-zinc-400 font-semibold">${t.tier} Risk</div>
-                    <div class="text-xs text-zinc-500 mt-0.5">Cut-off: ${t.range_str}</div>
-                    <div class="text-base font-extrabold mono text-zinc-100 mt-1.5">${(t.observed_poor_rate * 100).toFixed(1)}%</div>
-                    <div class="text-[10px] text-zinc-400">Observed failure rate (n=${t.group_count})</div>
-                </div>
-            `).join('');
+            // A5
+            try {
+                if (data.a5_fairness) renderFairnessSection(data.a5_fairness);
+            } catch (err) {
+                console.error('A5 render error:', err);
+            }
 
-            // ---------------------------------------------------------------------
-            // A5: Fairness Checks
-            // ---------------------------------------------------------------------
-            renderFairnessSection(data.a5_fairness);
+            // A6
+            try {
+                fetchWatchlist(30);
+            } catch (err) {
+                console.error('A6 render error:', err);
+            }
 
-            // ---------------------------------------------------------------------
-            // A6: Watchlist (Default K=30)
-            // ---------------------------------------------------------------------
-            fetchWatchlist(30);
-
-            // ---------------------------------------------------------------------
-            // A7: Initialize What-If Baseline
-            // ---------------------------------------------------------------------
-            initWhatIfControls(data.default_form);
+            // A7
+            try {
+                if (data.default_form) initWhatIfControls(data.default_form);
+            } catch (err) {
+                console.error('A7 render error:', err);
+            }
         }
 
         // =========================================================================
@@ -1129,171 +1283,192 @@
 
             ['campus', 'program', 'leader_gender', 'project_type', 'has_industry_sponsor'].forEach((field) => {
                 const sel = form.elements[field];
-                if (!sel || !options[field]) return;
+                if (!sel || !options || !options[field]) return;
                 sel.innerHTML = options[field].map((opt) => `<option value="${opt}">${opt}</option>`).join('');
             });
 
-            Object.entries(vals).forEach(([k, v]) => {
-                if (form.elements[k]) form.elements[k].value = v;
-            });
+            if (vals) {
+                Object.entries(vals).forEach(([k, v]) => {
+                    if (form.elements[k]) form.elements[k].value = v;
+                });
+            }
         }
 
         function readPredictForm() {
             const form = document.getElementById('predictForm');
             const data = {};
-            new FormData(form).forEach((val, key) => { data[key] = val; });
+            if (form) {
+                new FormData(form).forEach((val, key) => { data[key] = val; });
+            }
             return data;
         }
 
         async function runPredictionOnForm() {
+            if (!APP_DATA || !APP_DATA.ready) return;
             const payload = readPredictForm();
             CURRENT_BASELINE = { ...payload };
 
-            const res = await fetch('/api/predict', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: payload }),
-            });
-            if (!res.ok) return;
-            const p = await res.json();
+            try {
+                const res = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: payload }),
+                });
+                if (!res.ok) return;
+                const p = await res.json();
 
-            // Update Prediction Deck
-            const probPct = (p.failure_probability * 100).toFixed(1);
-            document.getElementById('predProbText').textContent = `${probPct}%`;
-            document.getElementById('predProbBar').style.width = `${Math.min(100, Math.max(0, probPct))}%`;
-            document.getElementById('predProbBar').className = `h-full rounded-full transition-all duration-500 ${p.risk_tier === 'Low' ? 'bg-emerald-500' : p.risk_tier === 'Medium' ? 'bg-amber-500' : 'bg-rose-500'}`;
+                // Safe Extraction
+                const probPct = p.probability_pct !== undefined ? p.probability_pct : ((p.probability || 0) * 100);
+                const probStr = Number(probPct).toFixed(1);
+                const tier = p.risk_tier || 'Low';
 
-            const badge = document.getElementById('predTierBadge');
-            badge.textContent = `${p.risk_tier} RISK`;
-            badge.className = `inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${badgeClassForTier(p.risk_tier)}`;
+                const pTxt = document.getElementById('predProbText');
+                if (pTxt) pTxt.textContent = `${probStr}%`;
+                const pBar = document.getElementById('predProbBar');
+                if (pBar) {
+                    pBar.style.width = `${Math.min(100, Math.max(0, Number(probStr)))}%`;
+                    pBar.className = `h-full rounded-full transition-all duration-500 ${tier === 'Low' ? 'bg-emerald-500' : tier === 'Medium' ? 'bg-amber-500' : 'bg-rose-500'}`;
+                }
 
-            document.getElementById('predOutcomeText').textContent = p.predicted_label === 1 ? 'Predicted Poor Outcome' : 'Predicted Passing Outcome';
-            document.getElementById('predPlainExpl').textContent = p.plain_english_summary;
-            document.getElementById('predSupportStep').textContent = p.recommended_coordinator_action;
+                const bTier = document.getElementById('predTierBadge');
+                if (bTier) {
+                    bTier.textContent = `${tier} RISK`;
+                    bTier.className = `inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${badgeClassForTier(tier)}`;
+                }
 
-            // Render Top 3 Attribution Drivers
-            const top3Container = document.getElementById('predTop3Container');
-            top3Container.innerHTML = p.top_drivers.map((d, i) => {
-                const isRiskInc = d.impact > 0;
-                return `
-                <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-between gap-3 text-xs">
-                    <div>
-                        <div class="font-semibold text-zinc-100">#${i + 1} · ${d.label}</div>
-                        <div class="text-[11px] text-zinc-400 mt-0.5">${d.reason}</div>
-                    </div>
-                    <div class="text-right mono">
-                        <span class="font-bold ${isRiskInc ? 'text-rose-400' : 'text-emerald-400'}">
-                            ${isRiskInc ? '+' : ''}${(d.impact * 100).toFixed(1)} pp
-                        </span>
-                        <div class="text-[10px] text-zinc-500">Value: ${d.value}</div>
-                    </div>
-                </div>
-            `;
-            }).join('');
+                const oTxt = document.getElementById('predOutcomeText');
+                if (oTxt) oTxt.textContent = p.predicted_outcome || 'Predicted Outcome';
+                const pExpl = document.getElementById('predPlainExpl');
+                if (pExpl) pExpl.textContent = p.plain_explanation || '';
+                const sStep = document.getElementById('predSupportStep');
+                if (sStep) sStep.textContent = p.support_step || '';
+
+                // Render Top 3 Attribution Drivers
+                const topDrivers = p.top_3_features || [];
+                const top3Container = document.getElementById('predTop3Container');
+                if (top3Container) {
+                    if (topDrivers.length === 0) {
+                        top3Container.innerHTML = '<div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-zinc-500">No attribution available.</div>';
+                    } else {
+                        top3Container.innerHTML = topDrivers.map((d, i) => {
+                            const isRiskInc = d.direction === 'increases_risk' || d.impact > 0;
+                            const impVal = d.impact_pct !== undefined ? d.impact_pct : ((d.impact || 0) * 100);
+                            return `
+                            <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-between gap-3 text-xs">
+                                <div>
+                                    <div class="font-semibold text-zinc-100">#${i + 1} · ${d.label}</div>
+                                    <div class="text-[11px] text-zinc-400 mt-0.5">Value: ${d.value}</div>
+                                </div>
+                                <div class="text-right mono">
+                                    <span class="font-bold ${isRiskInc ? 'text-rose-400' : 'text-emerald-400'}">
+                                        ${isRiskInc ? '+' : ''}${Number(impVal).toFixed(1)} pp
+                                    </span>
+                                </div>
+                            </div>
+                        `;
+                        }).join('');
+                    }
+                }
+            } catch (err) {
+                console.error('Prediction error:', err);
+            }
         }
 
         // =========================================================================
         // FAIRNESS AUDIT (A5)
         // =========================================================================
         function renderFairnessSection(f) {
-            document.getElementById('a5Takeaway').textContent = f.takeaway;
-            document.getElementById('a5GenderPval').textContent = `Chi-Square / 2-Prop p-value = ${f.gender_p_value.toFixed(4)}`;
-
-            document.getElementById('a5GenderBody').innerHTML = f.gender_comparison.map((g) => `
-                <tr class="hover:bg-zinc-800/40 transition">
-                    <td class="py-2 font-sans font-medium text-zinc-200">${g.group} Leader</td>
-                    <td class="py-2">${g.count}</td>
-                    <td class="py-2 font-semibold text-zinc-100">${(g.predicted_poor_rate * 100).toFixed(1)}% <span class="text-zinc-500 font-normal">[${(g.pred_ci_lo * 100).toFixed(1)}–${(g.pred_ci_hi * 100).toFixed(1)}%]</span></td>
-                    <td class="py-2 text-emerald-400 font-semibold">${(g.recall * 100).toFixed(1)}% <span class="text-zinc-500 font-normal">[${(g.rec_ci_lo * 100).toFixed(1)}–${(g.rec_ci_hi * 100).toFixed(1)}%]</span></td>
-                </tr>
-            `).join('');
-
-            Plotly.newPlot('chartFairGender', [
-                {
-                    name: 'Predicted Risk Rate (%)',
-                    x: f.gender_comparison.map((g) => g.group + '-led'),
-                    y: f.gender_comparison.map((g) => +(g.predicted_poor_rate * 100).toFixed(1)),
-                    type: 'bar',
-                    marker: { color: '#6366f1' },
-                },
-                {
-                    name: 'Recall (%)',
-                    x: f.gender_comparison.map((g) => g.group + '-led'),
-                    y: f.gender_comparison.map((g) => +(g.recall * 100).toFixed(1)),
-                    type: 'bar',
-                    marker: { color: '#10b981' },
-                },
-            ], { ...PLOTLY_DARK, barmode: 'group', yaxis: { ...PLOTLY_DARK.yaxis, title: 'Percentage (%)' }, legend: { orientation: 'h', y: 1.15 } },
-                { responsive: true, displayModeBar: false });
-
-            if (f.campus_gap && f.campus_gap.predicted_rate_highest) {
-                document.getElementById('a5CampusGapBadge').textContent =
-                    `Max Gap: ${(f.campus_gap.largest_predicted_rate_gap * 100).toFixed(1)} pp (${f.campus_gap.predicted_rate_highest} vs ${f.campus_gap.predicted_rate_lowest})`;
+            if (!f) return;
+            const tEl = document.getElementById('a5Takeaway');
+            if (tEl) tEl.textContent = f.takeaway || '';
+            const pEl = document.getElementById('a5GenderPval');
+            if (pEl && f.gender_p_value_pred !== undefined) {
+                pEl.textContent = `Chi-Square / 2-Prop p-value = ${f.gender_p_value_pred.toFixed(4)}`;
             }
 
-            document.getElementById('a5CampusBody').innerHTML = f.campus_comparison.map((c) => `
-                <tr class="hover:bg-zinc-800/40 transition">
-                    <td class="py-2 font-sans font-medium text-zinc-200">${c.campus}</td>
-                    <td class="py-2">${c.count}</td>
-                    <td class="py-2">${c.actual_poor_count}</td>
-                    <td class="py-2 text-zinc-100 font-semibold">${(c.predicted_poor_rate * 100).toFixed(1)}%</td>
-                    <td class="py-2 text-emerald-400 font-semibold">${(c.recall * 100).toFixed(1)}%</td>
-                </tr>
-            `).join('');
+            const gBody = document.getElementById('a5GenderBody');
+            if (gBody && f.gender_comparison) {
+                gBody.innerHTML = f.gender_comparison.map((g) => {
+                    const ciLo = g.predicted_rate_ci95 ? (g.predicted_rate_ci95[0] * 100).toFixed(1) : '0.0';
+                    const ciHi = g.predicted_rate_ci95 ? (g.predicted_rate_ci95[1] * 100).toFixed(1) : '0.0';
+                    const recLo = g.recall_ci95 ? (g.recall_ci95[0] * 100).toFixed(1) : '0.0';
+                    const recHi = g.recall_ci95 ? (g.recall_ci95[1] * 100).toFixed(1) : '0.0';
+                    return `
+                    <tr class="hover:bg-zinc-800/40 transition">
+                        <td class="py-2 font-sans font-medium text-zinc-200">${g.group} Leader</td>
+                        <td class="py-2">${g.count}</td>
+                        <td class="py-2 font-semibold text-zinc-100">${((g.predicted_poor_rate || 0) * 100).toFixed(1)}% <span class="text-zinc-500 font-normal">[${ciLo}–${ciHi}%]</span></td>
+                        <td class="py-2 text-emerald-400 font-semibold">${((g.recall || 0) * 100).toFixed(1)}% <span class="text-zinc-500 font-normal">[${recLo}–${recHi}%]</span></td>
+                    </tr>
+                `;
+                }).join('');
+            }
 
-            Plotly.newPlot('chartFairCampus', [
-                {
-                    name: 'Pred Risk Rate (%)',
-                    x: f.campus_comparison.map((c) => c.campus),
-                    y: f.campus_comparison.map((c) => +(c.predicted_poor_rate * 100).toFixed(1)),
-                    type: 'bar',
-                    marker: { color: '#6366f1' },
-                },
-                {
-                    name: 'Recall (%)',
-                    x: f.campus_comparison.map((c) => c.campus),
-                    y: f.campus_comparison.map((c) => +(c.recall * 100).toFixed(1)),
-                    type: 'bar',
-                    marker: { color: '#f59e0b' },
-                },
-            ], { ...PLOTLY_DARK, barmode: 'group', yaxis: { ...PLOTLY_DARK.yaxis, title: 'Percentage (%)' }, legend: { orientation: 'h', y: 1.15 } },
-                { responsive: true, displayModeBar: false });
+            const cGap = document.getElementById('a5CampusGapBadge');
+            if (cGap && f.campus_gap && f.campus_gap.predicted_rate_highest) {
+                cGap.textContent = `Max Gap: ${(f.campus_gap.largest_predicted_rate_gap * 100).toFixed(1)} pp (${f.campus_gap.predicted_rate_highest} vs ${f.campus_gap.predicted_rate_lowest})`;
+            }
+
+            const cBody = document.getElementById('a5CampusBody');
+            if (cBody && f.campus_comparison) {
+                cBody.innerHTML = f.campus_comparison.map((c) => `
+                    <tr class="hover:bg-zinc-800/40 transition">
+                        <td class="py-2 font-sans font-medium text-zinc-200">${c.campus}</td>
+                        <td class="py-2">${c.count}</td>
+                        <td class="py-2">${c.actual_poor_count}</td>
+                        <td class="py-2 text-zinc-100 font-semibold">${((c.predicted_poor_rate || 0) * 100).toFixed(1)}%</td>
+                        <td class="py-2 text-emerald-400 font-semibold">${((c.recall || 0) * 100).toFixed(1)}%</td>
+                    </tr>
+                `).join('');
+            }
         }
 
         // =========================================================================
         // A6: WATCHLIST & CAPACITY ALLOCATION
         // =========================================================================
         async function fetchWatchlist(k) {
-            document.getElementById('watchlistKVal').textContent = k;
-            document.getElementById('btnDownloadWatchlist').href = `/api/watchlist/download?k=${k}`;
-            const res = await fetch(`/api/watchlist?k=${k}`);
-            if (!res.ok) return;
-            const w = await res.json();
+            const kVal = document.getElementById('watchlistKVal');
+            if (kVal) kVal.textContent = k;
+            const dBtn = document.getElementById('btnDownloadWatchlist');
+            if (dBtn) dBtn.href = `/api/watchlist/download?k=${k}`;
 
-            document.getElementById('a6Captured').textContent = `${w.captured_poor_outcomes} / ${w.total_test_poor_outcomes}`;
-            document.getElementById('a6RecallK').textContent = `${(w.recall_at_k * 100).toFixed(1)}% of all test poor outcomes`;
-            document.getElementById('a6PrecisionK').textContent = `${(w.precision_at_k * 100).toFixed(1)}%`;
-            document.getElementById('a6RandomExp').textContent = `${w.random_baseline_captured} groups`;
-            document.getElementById('a6Lift').textContent = `${w.targeting_lift.toFixed(2)}×`;
+            if (!APP_DATA || !APP_DATA.ready) return;
 
-            const tbody = document.getElementById('a6TableBody');
-            tbody.innerHTML = w.groups.map((g) => `
-                <tr class="hover:bg-zinc-800/40 transition">
-                    <td class="py-2.5 px-2 mono text-zinc-500 font-semibold">${g.rank}</td>
-                    <td class="py-2.5 px-2 font-mono font-medium text-zinc-200">${g.group_id} <span class="text-zinc-500 text-xs">(${g.campus})</span></td>
-                    <td class="py-2.5 px-2 mono font-bold ${g.tier === 'High' ? 'text-rose-400' : 'text-amber-400'}">${g.probability_pct}%</td>
-                    <td class="py-2.5 px-2">
-                        <span class="text-[10px] px-2 py-0.5 rounded ${badgeClassForTier(g.tier)} font-semibold uppercase">${g.tier}</span>
-                    </td>
-                    <td class="py-2.5 px-2 text-xs text-zinc-300">
-                        <div class="font-medium">${g.top_risk_driver}</div>
-                        <div class="text-[11px] text-zinc-400">${g.recommended_action}</div>
-                    </td>
-                    <td class="py-2.5 px-2 mono font-semibold ${g.actual_poor_outcome === 'Yes' ? 'text-rose-400' : 'text-zinc-400'}">
-                        ${g.actual_poor_outcome}
-                    </td>
-                </tr>
-            `).join('');
+            try {
+                const res = await fetch(`/api/watchlist?k=${k}`);
+                if (!res.ok) return;
+                const w = await res.json();
+
+                const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+                setTxt('a6Captured', `${w.captured_poor_outcomes || 0} / ${w.total_test_poor_outcomes || 0}`);
+                setTxt('a6RecallK', `${(((w.recall_at_k || 0) * 100)).toFixed(1)}% of cohort poor outcomes`);
+                setTxt('a6PrecisionK', `${(((w.precision_at_k || 0) * 100)).toFixed(1)}%`);
+                setTxt('a6RandomExp', `${Number(w.expected_random_poor || 0).toFixed(1)} groups`);
+                setTxt('a6Lift', `${Number(w.lift_over_random || 0).toFixed(2)}×`);
+
+                const tbody = document.getElementById('a6TableBody');
+                if (tbody && w.groups) {
+                    tbody.innerHTML = w.groups.map((g) => `
+                        <tr class="hover:bg-zinc-800/40 transition">
+                            <td class="py-2.5 px-2 mono text-zinc-500 font-semibold">${g.rank}</td>
+                            <td class="py-2.5 px-2 font-mono font-medium text-zinc-200">${g.group_id} <span class="text-zinc-500 text-xs">(${g.campus})</span></td>
+                            <td class="py-2.5 px-2 mono font-bold ${g.tier === 'High' ? 'text-rose-400' : 'text-amber-400'}">${g.probability_pct}%</td>
+                            <td class="py-2.5 px-2">
+                                <span class="text-[10px] px-2 py-0.5 rounded ${badgeClassForTier(g.tier)} font-semibold uppercase">${g.tier}</span>
+                            </td>
+                            <td class="py-2.5 px-2 text-xs text-zinc-300">
+                                <div class="font-medium">${g.top_risk_driver}</div>
+                                <div class="text-[11px] text-zinc-400">${g.recommended_action}</div>
+                            </td>
+                            <td class="py-2.5 px-2 mono font-semibold ${g.actual_poor_outcome === 'Yes' ? 'text-rose-400' : 'text-zinc-400'}">
+                                ${g.actual_poor_outcome}
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('Watchlist error:', err);
+            }
         }
 
         // =========================================================================
@@ -1310,34 +1485,38 @@
         function initWhatIfControls(baseline) {
             CURRENT_BASELINE = { ...baseline };
             const container = document.getElementById('whatifSliders');
-            container.innerHTML = ACTIONABLE_LEVERS.map((lev) => {
-                const val = baseline[lev.key] !== undefined ? baseline[lev.key] : lev.min;
-                return `
-                <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 space-y-1.5" data-lever="${lev.key}">
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="font-medium text-zinc-300">${lev.label}</span>
-                        <span id="leverVal_${lev.key}" class="mono font-bold text-zinc-100">${val}</span>
+            if (container) {
+                container.innerHTML = ACTIONABLE_LEVERS.map((lev) => {
+                    const val = baseline[lev.key] !== undefined ? baseline[lev.key] : lev.min;
+                    return `
+                    <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 space-y-1.5" data-lever="${lev.key}">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-medium text-zinc-300">${lev.label}</span>
+                            <span id="leverVal_${lev.key}" class="mono font-bold text-zinc-100">${val}</span>
+                        </div>
+                        <input type="range" min="${lev.min}" max="${lev.max}" step="${lev.step}" value="${val}"
+                               class="whatif-slider" data-lever="${lev.key}" />
+                        <div class="flex justify-between text-[10px] mono text-zinc-500">
+                            <span>Min: ${lev.min}</span><span>Max: ${lev.max}</span>
+                        </div>
                     </div>
-                    <input type="range" min="${lev.min}" max="${lev.max}" step="${lev.step}" value="${val}"
-                           class="whatif-slider" data-lever="${lev.key}" />
-                    <div class="flex justify-between text-[10px] mono text-zinc-500">
-                        <span>Min: ${lev.min}</span><span>Max: ${lev.max}</span>
-                    </div>
-                </div>
-            `;
-            }).join('');
+                `;
+                }).join('');
+            }
 
-            // Locked summary indicators
             const locked = [
-                `Campus: ${baseline.campus || 'Lahore'}`,
+                `Campus: ${baseline.campus || 'Karachi'}`,
                 `Program: ${baseline.program || 'BSCS'}`,
                 `Gender: ${baseline.leader_gender || 'Male'}`,
                 `Team CGPA: ${baseline.team_avg_cgpa || '3.0'}`,
                 `Group Size: ${baseline.group_size || '3'}`,
             ];
-            document.getElementById('lockedSummary').innerHTML = locked.map((l) => `
-                <span class="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">${l} 🔒</span>
-            `).join('');
+            const lSum = document.getElementById('lockedSummary');
+            if (lSum) {
+                lSum.innerHTML = locked.map((l) => `
+                    <span class="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">${l} 🔒</span>
+                `).join('');
+            }
 
             document.querySelectorAll('.whatif-slider').forEach((sl) => {
                 sl.addEventListener('input', (e) => {
@@ -1348,47 +1527,69 @@
                 });
             });
 
-            runWhatIf();
+            if (APP_DATA && APP_DATA.ready) {
+                runWhatIf();
+            }
         }
 
         async function runWhatIf() {
+            if (!APP_DATA || !APP_DATA.ready) return;
             const levers = {};
             document.querySelectorAll('.whatif-slider').forEach((sl) => {
                 levers[sl.dataset.lever] = Number(sl.value);
             });
 
-            const res = await fetch('/api/whatif', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ baseline: CURRENT_BASELINE, levers }),
-            });
-            if (!res.ok) return;
-            const w = await res.json();
+            try {
+                const res = await fetch('/api/whatif', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ baseline: CURRENT_BASELINE, levers }),
+                });
+                if (!res.ok) return;
+                const w = await res.json();
 
-            document.getElementById('wiBeforeProb').textContent = `${(w.before_prob * 100).toFixed(1)}%`;
-            const bTier = document.getElementById('wiBeforeTier');
-            bTier.textContent = `${w.before_tier} RISK`;
-            bTier.className = `inline-block px-2.5 py-0.5 rounded text-xs font-bold uppercase ${badgeClassForTier(w.before_tier)}`;
+                const beforeProb = w.before ? (w.before.probability_pct !== undefined ? w.before.probability_pct : ((w.before.probability || 0) * 100)) : 0;
+                const beforeTier = (w.before && w.before.risk_tier) ? w.before.risk_tier : 'Low';
+                const afterProb = w.after ? (w.after.probability_pct !== undefined ? w.after.probability_pct : ((w.after.probability || 0) * 100)) : 0;
+                const afterTier = (w.after && w.after.risk_tier) ? w.after.risk_tier : 'Low';
+                const deltaVal = w.delta_probability_pct !== undefined ? w.delta_probability_pct : (afterProb - beforeProb);
 
-            document.getElementById('wiAfterProb').textContent = `${(w.after_prob * 100).toFixed(1)}%`;
-            const aTier = document.getElementById('wiAfterTier');
-            aTier.textContent = `${w.after_tier} RISK`;
-            aTier.className = `inline-block px-2.5 py-0.5 rounded text-xs font-bold uppercase ${badgeClassForTier(w.after_tier)}`;
+                const bProbEl = document.getElementById('wiBeforeProb');
+                if (bProbEl) bProbEl.textContent = `${Number(beforeProb).toFixed(1)}%`;
+                const bTierEl = document.getElementById('wiBeforeTier');
+                if (bTierEl) {
+                    bTierEl.textContent = `${beforeTier} RISK`;
+                    bTierEl.className = `inline-block px-2.5 py-0.5 rounded text-xs font-bold uppercase ${badgeClassForTier(beforeTier)}`;
+                }
 
-            const deltaEl = document.getElementById('wiDeltaText');
-            const d = w.delta_probability * 100;
-            if (d < 0) {
-                deltaEl.textContent = `(${d.toFixed(1)} pp)`;
-                deltaEl.className = 'text-xs font-bold mono text-emerald-400';
-            } else if (d > 0) {
-                deltaEl.textContent = `(+${d.toFixed(1)} pp)`;
-                deltaEl.className = 'text-xs font-bold mono text-rose-400';
-            } else {
-                deltaEl.textContent = `(0.0 pp)`;
-                deltaEl.className = 'text-xs font-bold mono text-zinc-500';
+                const aProbEl = document.getElementById('wiAfterProb');
+                if (aProbEl) aProbEl.textContent = `${Number(afterProb).toFixed(1)}%`;
+                const aTierEl = document.getElementById('wiAfterTier');
+                if (aTierEl) {
+                    aTierEl.textContent = `${afterTier} RISK`;
+                    aTierEl.className = `inline-block px-2.5 py-0.5 rounded text-xs font-bold uppercase ${badgeClassForTier(afterTier)}`;
+                }
+
+                const deltaEl = document.getElementById('wiDeltaText');
+                if (deltaEl) {
+                    const d = Number(deltaVal);
+                    if (d < 0) {
+                        deltaEl.textContent = `(${d.toFixed(1)} pp)`;
+                        deltaEl.className = 'text-xs font-bold mono text-emerald-400';
+                    } else if (d > 0) {
+                        deltaEl.textContent = `(+${d.toFixed(1)} pp)`;
+                        deltaEl.className = 'text-xs font-bold mono text-rose-400';
+                    } else {
+                        deltaEl.textContent = `(0.0 pp)`;
+                        deltaEl.className = 'text-xs font-bold mono text-zinc-500';
+                    }
+                }
+
+                const aAct = document.getElementById('wiAfterAction');
+                if (aAct) aAct.textContent = (w.after && w.after.support_step) ? w.after.support_step : 'Maintain standard supervision.';
+            } catch (err) {
+                console.error('What-If error:', err);
             }
-
-            document.getElementById('wiAfterAction').textContent = w.recommended_coordinator_action;
         }
 
         // =========================================================================
@@ -1400,10 +1601,12 @@
                 document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
                 btn.classList.add('active');
                 const panel = document.getElementById(btn.dataset.tab);
-                panel.classList.add('active');
-                setTimeout(() => {
-                    panel.querySelectorAll('.js-plotly-plot').forEach((plot) => Plotly.Plots.resize(plot));
-                }, 40);
+                if (panel) {
+                    panel.classList.add('active');
+                    setTimeout(() => {
+                        panel.querySelectorAll('.js-plotly-plot').forEach((plot) => Plotly.Plots.resize(plot));
+                    }, 40);
+                }
             });
         });
 
@@ -1418,21 +1621,26 @@
                 if (!res.ok) throw new Error(data.detail || 'Upload failed');
                 renderAll(data);
             } catch (err) {
-                alert('Error: ' + err.message);
+                console.error('Upload error:', err);
+                alert('Upload Error: ' + err.message);
             } finally {
                 hideLoading();
             }
         }
 
-        document.getElementById('csvFileInput').addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) handleCsvUpload(file);
-        });
+        const fInput = document.getElementById('csvFileInput');
+        if (fInput) {
+            fInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) handleCsvUpload(file);
+            });
+        }
 
         const emptyState = document.getElementById('emptyStateBanner');
         if (emptyState) {
             emptyState.addEventListener('click', () => {
-                document.getElementById('csvFileInput').click();
+                const fi = document.getElementById('csvFileInput');
+                if (fi) fi.click();
             });
             emptyState.addEventListener('dragover', (e) => {
                 e.preventDefault();
@@ -1453,111 +1661,164 @@
             });
         }
 
-        document.getElementById('predictForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await runPredictionOnForm();
-        });
+        const pForm = document.getElementById('predictForm');
+        if (pForm) {
+            pForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!APP_DATA || !APP_DATA.ready) {
+                    alert('Please upload a dataset first to run live predictions.');
+                    return;
+                }
+                await runPredictionOnForm();
+            });
+        }
 
-        document.getElementById('btnPresetRisk').addEventListener('click', () => {
-            const form = document.getElementById('predictForm');
-            form.elements['mid_eval_score'].value = 48.0;
-            form.elements['team_avg_cgpa'].value = 2.35;
-            form.elements['team_min_cgpa'].value = 2.10;
-            form.elements['supervisor_meetings_8wk'].value = 2;
-            form.elements['github_commits_8wk'].value = 12;
-            form.elements['proposal_revisions'].value = 4;
-            form.elements['weeks_to_proposal_approval'].value = 14;
-            form.elements['group_size'].value = 4;
-            runPredictionOnForm();
-        });
+        const bRisk = document.getElementById('btnPresetRisk');
+        if (bRisk) {
+            bRisk.addEventListener('click', () => {
+                const form = document.getElementById('predictForm');
+                if (!form) return;
+                form.elements['mid_eval_score'].value = 48.0;
+                form.elements['team_avg_cgpa'].value = 2.35;
+                form.elements['team_min_cgpa'].value = 2.10;
+                form.elements['supervisor_meetings_8wk'].value = 2;
+                form.elements['github_commits_8wk'].value = 12;
+                form.elements['proposal_revisions'].value = 4;
+                form.elements['weeks_to_proposal_approval'].value = 14;
+                form.elements['group_size'].value = 4;
+                if (APP_DATA && APP_DATA.ready) {
+                    runPredictionOnForm();
+                } else {
+                    alert('Please upload a dataset first to run live predictions.');
+                }
+            });
+        }
 
-        document.getElementById('btnPresetSafe').addEventListener('click', () => {
-            const form = document.getElementById('predictForm');
-            form.elements['mid_eval_score'].value = 88.0;
-            form.elements['team_avg_cgpa'].value = 3.65;
-            form.elements['team_min_cgpa'].value = 3.50;
-            form.elements['supervisor_meetings_8wk'].value = 10;
-            form.elements['github_commits_8wk'].value = 145;
-            form.elements['proposal_revisions'].value = 1;
-            form.elements['weeks_to_proposal_approval'].value = 3;
-            form.elements['group_size'].value = 3;
-            runPredictionOnForm();
-        });
+        const bSafe = document.getElementById('btnPresetSafe');
+        if (bSafe) {
+            bSafe.addEventListener('click', () => {
+                const form = document.getElementById('predictForm');
+                if (!form) return;
+                form.elements['mid_eval_score'].value = 88.0;
+                form.elements['team_avg_cgpa'].value = 3.65;
+                form.elements['team_min_cgpa'].value = 3.50;
+                form.elements['supervisor_meetings_8wk'].value = 10;
+                form.elements['github_commits_8wk'].value = 145;
+                form.elements['proposal_revisions'].value = 1;
+                form.elements['weeks_to_proposal_approval'].value = 3;
+                form.elements['group_size'].value = 3;
+                if (APP_DATA && APP_DATA.ready) {
+                    runPredictionOnForm();
+                } else {
+                    alert('Please upload a dataset first to run live predictions.');
+                }
+            });
+        }
 
-        document.getElementById('btnSendToWhatIf').addEventListener('click', () => {
-            document.querySelectorAll('.nav-btn').forEach((b) => b.classList.remove('active'));
-            document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
-            const wiBtn = document.querySelector('.nav-btn[data-tab="tab-a7"]');
-            const wiPanel = document.getElementById('tab-a7');
-            if (wiBtn && wiPanel) {
-                wiBtn.classList.add('active');
-                wiPanel.classList.add('active');
-            }
-            initWhatIfControls(readPredictForm());
-        });
+        const bSendWI = document.getElementById('btnSendToWhatIf');
+        if (bSendWI) {
+            bSendWI.addEventListener('click', () => {
+                document.querySelectorAll('.nav-btn').forEach((b) => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
+                const wiBtn = document.querySelector('.nav-btn[data-tab="tab-a7"]');
+                const wiPanel = document.getElementById('tab-a7');
+                if (wiBtn && wiPanel) {
+                    wiBtn.classList.add('active');
+                    wiPanel.classList.add('active');
+                }
+                initWhatIfControls(readPredictForm());
+            });
+        }
 
-        document.getElementById('watchlistKSlider').addEventListener('input', (e) => {
-            fetchWatchlist(e.target.value);
-        });
+        const wSlider = document.getElementById('watchlistKSlider');
+        if (wSlider) {
+            wSlider.addEventListener('input', (e) => {
+                if (APP_DATA && APP_DATA.ready) {
+                    fetchWatchlist(e.target.value);
+                } else {
+                    const el = document.getElementById('watchlistKVal');
+                    if (el) el.textContent = e.target.value;
+                }
+            });
+        }
 
-        document.getElementById('btnFindBestLever').addEventListener('click', async () => {
-            showLoading('CALCULATING OPTIMAL COUNTERFACTUAL INTERVENTION LEVER...');
-            try {
-                const res = await fetch('/api/whatif/best-lever', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: CURRENT_BASELINE }),
-                });
-                if (!res.ok) throw new Error('Simulation failed');
-                const out = await res.json();
-                LAST_BEST_LEVER = out.best_lever;
+        const bFindLev = document.getElementById('btnFindBestLever');
+        if (bFindLev) {
+            bFindLev.addEventListener('click', async () => {
+                if (!APP_DATA || !APP_DATA.ready) {
+                    alert('Please upload a dataset first.');
+                    return;
+                }
+                showLoading('CALCULATING OPTIMAL COUNTERFACTUAL INTERVENTION LEVER...');
+                try {
+                    const res = await fetch('/api/whatif/best-lever', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: CURRENT_BASELINE }),
+                    });
+                    if (!res.ok) throw new Error('Simulation failed');
+                    const out = await res.json();
+                    LAST_BEST_LEVER = out.best_lever;
 
-                const box = document.getElementById('bestLeverBox');
-                box.classList.remove('hidden');
-                document.getElementById('bestLeverSummary').innerHTML =
-                    `Top Lever: <strong class="text-emerald-400">${out.best_lever.label}</strong> provides <strong>${(out.best_lever.risk_reduction_pp).toFixed(1)} pp</strong> risk reduction (from ${(out.baseline_risk * 100).toFixed(1)}% down to ${(out.best_lever.simulated_risk * 100).toFixed(1)}%).`;
+                    const box = document.getElementById('bestLeverBox');
+                    if (box) box.classList.remove('hidden');
 
-                document.getElementById('bestLeverList').innerHTML = out.ranked_levers.map((lev) => `
-                    <div class="flex items-center justify-between p-2 rounded bg-zinc-900 border border-zinc-800">
-                        <span class="text-zinc-300">${lev.label} (Set to ${lev.to_value})</span>
-                        <span class="text-emerald-400 font-bold">-${lev.risk_reduction_pp.toFixed(1)} pp</span>
-                    </div>
-                `).join('');
-            } catch (err) {
-                alert('Error: ' + err.message);
-            } finally {
-                hideLoading();
-            }
-        });
+                    const bSum = document.getElementById('bestLeverSummary');
+                    if (bSum && out.best_lever) {
+                        const redPp = Math.abs(out.best_lever.delta_pct || 0).toFixed(1);
+                        const baseRisk = Number(out.baseline_probability_pct || 0).toFixed(1);
+                        const simRisk = Number(out.best_lever.new_probability_pct || 0).toFixed(1);
+                        bSum.innerHTML = `Top Lever: <strong class="text-emerald-400">${out.best_lever.label}</strong> provides <strong>${redPp} pp</strong> risk reduction (from ${baseRisk}% down to ${simRisk}%).`;
+                    }
 
-        document.getElementById('btnApplyBestLever').addEventListener('click', () => {
-            if (!LAST_BEST_LEVER) return;
-            const el = document.querySelector(`#whatifSliders [data-lever="${LAST_BEST_LEVER.lever}"] input`);
-            if (!el) return;
-            el.value = LAST_BEST_LEVER.to_value;
-            const lbl = document.getElementById(`leverVal_${LAST_BEST_LEVER.lever}`);
-            if (lbl) lbl.textContent = el.value;
-            runWhatIf();
-        });
+                    const bList = document.getElementById('bestLeverList');
+                    if (bList && out.all_levers) {
+                        bList.innerHTML = out.all_levers.map((lev) => `
+                            <div class="flex items-center justify-between p-2 rounded bg-zinc-900 border border-zinc-800">
+                                <span class="text-zinc-300">${lev.label} (Set to ${lev.to_value})</span>
+                                <span class="text-emerald-400 font-bold">${(lev.delta_pct || 0).toFixed(1)} pp</span>
+                            </div>
+                        `).join('');
+                    }
+                } catch (err) {
+                    console.error('Best lever error:', err);
+                } finally {
+                    hideLoading();
+                }
+            });
+        }
 
-        document.getElementById('btnResetLevers').addEventListener('click', () => {
-            initWhatIfControls(CURRENT_BASELINE);
-        });
+        const bApplyLev = document.getElementById('btnApplyBestLever');
+        if (bApplyLev) {
+            bApplyLev.addEventListener('click', () => {
+                if (!LAST_BEST_LEVER) return;
+                const el = document.querySelector(`#whatifSliders [data-lever="${LAST_BEST_LEVER.lever}"] input`);
+                if (!el) return;
+                el.value = LAST_BEST_LEVER.to_value;
+                const lbl = document.getElementById(`leverVal_${LAST_BEST_LEVER.lever}`);
+                if (lbl) lbl.textContent = el.value;
+                runWhatIf();
+            });
+        }
+
+        const bResetLev = document.getElementById('btnResetLevers');
+        if (bResetLev) {
+            bResetLev.addEventListener('click', () => {
+                initWhatIfControls(CURRENT_BASELINE);
+            });
+        }
 
         // Boot Sequence
         window.addEventListener('DOMContentLoaded', async () => {
-            initTiltCard();
+            renderZeroState();
             try {
                 const res = await fetch('/api/overview');
                 const data = await res.json();
                 if (data.ready) {
                     renderAll(data);
-                } else {
-                    document.getElementById('emptyStateBanner').classList.remove('hidden');
                 }
             } catch (err) {
-                console.error(err);
-                document.getElementById('emptyStateBanner').classList.remove('hidden');
+                console.error('Initialization error:', err);
             }
         });
     </script>

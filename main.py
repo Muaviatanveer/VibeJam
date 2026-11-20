@@ -17,7 +17,7 @@ os.makedirs(STATIC_DIR, exist_ok=True)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
-@app.get("/favicon.ico")
+@app.api_route("/favicon.ico", methods=["GET", "HEAD"])
 def favicon():
     return FileResponse(os.path.join(STATIC_DIR, "favicon.svg"), media_type="image/svg+xml")
 
