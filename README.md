@@ -108,15 +108,17 @@ $$\phi_j(\mathbf{x}) = f(\mathbf{x}) - \frac{1}{|\mathcal{B}|}\sum_{\mathbf{b} \
 ---
 
 ### 5. Statistical Fairness Audit: Wilson CIs & Z-Test (A5)
-Subgroup disparities across **Leader Gender** and **Campuses with $n \ge 30$ test groups** are evaluated with exact **Wilson 95% Confidence Intervals** and a two-proportion $Z$-test computed via the Gaussian error function $\operatorname{erf}(\cdot)$:
+Subgroup disparities across **Leader Gender** and **Campuses with $n \ge 30$ test groups** are evaluated with exact **Wilson 95% Confidence Intervals** and a two-proportion $Z$-test computed via the Gaussian error function $\mathrm{erf}(\cdot)$:
 
-$$\text{CI}_{95\%} = \frac{\hat{p} + \frac{z^2}{2n} \pm z\sqrt{\frac{\hat{p}(1-\hat{p})}{n} + \frac{z^2}{4n^2}}}{1 + \frac{z^2}{n}}, \qquad p = 2\left(1 - \frac{1}{2}\left[1 + \operatorname{erf}\!\left(\frac{|Z|}{\sqrt{2}}\right)\right]\right)$$
+$$\text{CI}_{95\%} = \frac{\hat{p} + \frac{z^2}{2n} \pm z\sqrt{\frac{\hat{p}(1-\hat{p})}{n} + \frac{z^2}{4n^2}}}{1 + \frac{z^2}{n}}, \qquad p = 2\left(1 - \frac{1}{2}\left[1 + \mathrm{erf}\!\left(\frac{|Z|}{\sqrt{2}}\right)\right]\right)$$
 
 ---
 
 ### 6. Coordinator Capacity Watchlist & What-If Sensitivity (A6 & A7)
 * **Weekly Watchlist Lift ($K \in [10, 100]$):**
-  $$\text{Precision}@K = \frac{\text{TP}_K}{K}, \qquad \mathbb{E}[\text{Random Hits}] = K \cdot \bar{y}_{\text{test}}, \qquad \text{Lift}@K = \frac{\text{TP}_K}{K \cdot \bar{y}_{\text{test}}}$$
+
+$$\text{Precision}@K = \frac{\text{TP}_K}{K}, \qquad \mathbb{E}[\text{Random Hits}] = K \cdot \bar{y}_{\text{test}}, \qquad \text{Lift}@K = \frac{\text{TP}_K}{K \cdot \bar{y}_{\text{test}}}$$
+
 * **Bounded Counterfactual Lever Search (A7):** Immutable attributes (`campus`, `program`, `leader_gender`, historical `CGPA`) are strictly locked. The *"Find Best Lever"* solver evaluates $\Delta \hat{p}_\ell = f(\mathbf{x} \oplus \ell^*) - f(\mathbf{x})$ across actionable levers only, accompanied by an explicit **Association $\neq$ Causation** notice.
 
 ---
