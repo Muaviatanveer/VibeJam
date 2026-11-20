@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FYP-Pulse · Academic Risk Intelligence Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-canvas: #09090b;
+            --surface-card: #111318;
+            --surface-elevated: #161820;
+            --border-subtle: #232730;
+            --border-hover: #383e4d;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-indigo: #6366f1;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 15% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 40%),
+                radial-gradient(at 85% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 40%);
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Linear-Style Surface Cards */
+        .glass {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 0.75rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        .glass-hover:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
+        }
+
+        .surface-nested {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 0.5rem;
+        }
+
+        /* Segmented Nav Controls (Linear Style) */
+        .nav-btn {
+            padding: 0.45rem 0.85rem;
+            border-radius: 0.5rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            background: transparent;
+        }
+
+        .nav-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .nav-btn.active {
+            color: #ffffff;
+            background: #232730;
+            border-color: #383e4d;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Minimal Status Pills */
+        .badge-green {
+            background: rgba(16, 185, 129, 0.12);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .badge-yellow {
+            background: rgba(245, 158, 11, 0.12);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .badge-red {
+            background: rgba(244, 63, 94, 0.12);
+            color: #fb7185;
+            border: 1px solid rgba(244, 63, 94, 0.25);
+        }
+
+        /* Inputs & Form Controls */
+        .input-glass {
+            width: 100%;
+            background: #0d0f14;
+            border: 1px solid var(--border-subtle);
+            color: #f4f4f5;
+            padding: 0.5rem 0.7rem;
+            border-radius: 0.5rem;
+            font-size: 0.82rem;
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .input-glass:focus {
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Custom Range Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            background: #27272a;
+            border-radius: 999px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #f4f4f5;
+            border: 2px solid #18181b;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            background: #ffffff;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 999px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay"
+        class="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-sm flex flex-col items-center justify-center hidden">
+        <div class="w-10 h-10 rounded-full border-2 border-zinc-700 border-t-zinc-100 animate-spin mb-3"></div>
+        <p id="loadingText" class="text-zinc-300 font-medium tracking-wide mono text-xs">PROCESSING PIPELINE...</p>
+    </div>
+
+    <!-- Main Container -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+
+        <!-- Top Navigation Bar -->
+        <header class="glass px-5 py-3.5 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 font-bold flex items-center justify-center text-xs tracking-wider shadow-sm">
+                    FP
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">FYP-PULSE</h1>
+                        <span class="text-[10px] mono uppercase px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-300 border border-zinc-700/60 font-medium">
+                            Early Warning System · Week 8
+                        </span>
+                    </div>
+                    <p class="text-xs text-zinc-400">Zero-Leakage Calibrated ML · Local Interventional Attributions · Coordinator Decision Cockpit</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div id="datasetStatusBadge"
+                    class="hidden sm:flex items-center gap-2 text-xs mono px-3 py-1.5 rounded-md bg-zinc-900 border border-zinc-800">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span id="datasetNameLabel" class="text-zinc-300">Waiting for CSV...</span>
+                </div>
+                <label
+                    class="cursor-pointer inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-zinc-100 hover:bg-white text-zinc-950 font-semibold text-xs transition shadow-sm">
+                    <span>↑ Upload CSV</span>
+                    <input id="csvFileInput" type="file" accept=".csv" class="hidden" />
+                </label>
+            </div>
+        </header>
+
+        <!-- Executive KPI Telemetry Deck (Linear Minimalist Style) -->
+        <section class="glass p-5 sm:p-6 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-zinc-800/80 pb-3">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Production Checkpoint
+                        </span>
+                        <span class="text-xs text-zinc-400">Week-8 Risk Surveillance</span>
+                    </div>
+                    <h2 class="text-lg sm:text-xl font-bold text-zinc-100 tracking-tight mt-1">
+                        Cohort Early Warning & Intervention Metrics
+                    </h2>
+                </div>
+                <div class="text-xs text-zinc-400 sm:text-right">
+                    Zero temporal leakage · Platt-calibrated ensemble · Interventional Shapley attribution
+                </div>
+            </div>
+
+            <!-- 4 Executive KPI Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+                <div class="glass glass-hover p-4 rounded-xl">
+                    <div class="flex items-center justify-between text-xs text-zinc-400 font-medium">
+                        <span>Cohort Cleaned</span>
+                        <span class="text-emerald-400 text-[11px] font-mono" id="heroRemovedRows">--</span>
+                    </div>
+                    <div id="heroCleanedRows" class="text-2xl sm:text-3xl font-extrabold mono text-zinc-100 mt-2">--</div>
+                    <div class="text-[11px] text-zinc-500 mt-1">Verified Week-8 records</div>
+                </div>
+
+                <div class="glass glass-hover p-4 rounded-xl">
+                    <div class="flex items-center justify-between text-xs text-zinc-400 font-medium">
+                        <span>At-Risk Prevalence</span>
+                        <span class="text-rose-400 text-[11px] font-mono" id="heroPoorCount">--</span>
+                    </div>
+                    <div id="heroPoorRate" class="text-2xl sm:text-3xl font-extrabold mono text-rose-400 mt-2">--</div>
+                    <div class="text-[11px] text-zinc-500 mt-1">Historical poor outcome baseline</div>
+                </div>
+
+                <div class="glass glass-hover p-4 rounded-xl">
+                    <div class="flex items-center justify-between text-xs text-zinc-400 font-medium">
+                        <span>Discrimination (ROC-AUC)</span>
+                        <span class="text-indigo-400 text-[11px] font-mono">Stratified 5-Fold</span>
+                    </div>
+                    <div id="heroRocAuc" class="text-2xl sm:text-3xl font-extrabold mono text-indigo-300 mt-2">--</div>
+                    <div id="heroModelShort" class="text-[11px] text-zinc-500 mt-1 truncate">--</div>
+                </div>
+
+                <div class="glass glass-hover p-4 rounded-xl">
+                    <div class="flex items-center justify-between text-xs text-zinc-400 font-medium">
+                        <span>Intervention Recall</span>
+                        <span id="heroVsDummy" class="text-emerald-400 text-[11px] font-mono">vs 0% dummy</span>
+                    </div>
+                    <div id="heroRecall" class="text-2xl sm:text-3xl font-extrabold mono text-emerald-400 mt-2">--</div>
+                    <div class="text-[11px] text-zinc-500 mt-1">Catch rate at cost-optimal cut</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Empty State Banner (Clean Dropzone when no CSV is loaded) -->
+        <section id="emptyStateBanner"
+            class="glass p-12 text-center space-y-4 border-2 border-dashed border-zinc-800 hover:border-zinc-700 rounded-xl cursor-pointer transition hidden">
+            <div class="w-12 h-12 mx-auto rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 text-xl">
+                ↑
+            </div>
+            <h3 class="text-lg font-bold text-zinc-100">No Dataset Ingested Yet</h3>
+            <p class="text-zinc-400 max-w-md mx-auto text-xs leading-relaxed">
+                Click here or use the <strong class="text-zinc-200">↑ Upload CSV</strong> button to ingest your cohort dataset and run the automated A1–A7 evaluation pipeline.
+            </p>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs mono">
+                Supports standard .csv · Automated MICE imputation & calibration
+            </div>
+        </section>
+
+        <!-- Main Workspace (shown once data is ready) -->
+        <div id="workspace" class="space-y-5 hidden">
+
+            <!-- Tab Navigation (Segmented Pill Bar) -->
+            <nav class="glass p-1.5 flex items-center gap-1 overflow-x-auto">
+                <button class="nav-btn active" data-tab="tab-a1">01 · Data Audit (A1)</button>
+                <button class="nav-btn" data-tab="tab-a2">02 · Insights (A2)</button>
+                <button class="nav-btn" data-tab="tab-a3">03 · Model Arena (A3)</button>
+                <button class="nav-btn" data-tab="tab-a4">04 · Predictor & Explain (A4+A5)</button>
+                <button class="nav-btn" data-tab="tab-a5">05 · Fairness Audit (A5)</button>
+                <button class="nav-btn" data-tab="tab-a6">06 · Watchlist (A6)</button>
+                <button class="nav-btn" data-tab="tab-a7">07 · What-If Lab (A7)</button>
+            </nav>
+
+            <!-- ================================================================= -->
+            <!-- TAB A1: DATA CLEANING & QUALITY SUMMARY                           -->
+            <!-- ================================================================= -->
+            <section id="tab-a1" class="tab-panel active space-y-5">
+                <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
+                    <div class="glass p-4">
+                        <div class="text-xs text-zinc-400">Initial Rows</div>
+                        <div id="a1InitialRows" class="text-2xl font-bold mono text-zinc-100 mt-1">--</div>
+                    </div>
+                    <div class="glass p-4">
+                        <div class="text-xs text-zinc-400">Cleaned Rows</div>
+                        <div id="a1CleanedRows" class="text-2xl font-bold mono text-emerald-400 mt-1">--</div>
+                    </div>
+                    <div class="glass p-4">
+                        <div class="text-xs text-zinc-400">Total Cells Corrected</div>
+                        <div id="a1CellsFixed" class="text-2xl font-bold mono text-amber-400 mt-1">--</div>
+                    </div>
+                    <div class="glass p-4">
+                        <div class="text-xs text-zinc-400">Total Poor Outcomes</div>
+                        <div id="a1PoorCount" class="text-2xl font-bold mono text-rose-400 mt-1">--</div>
+                    </div>
+                    <div class="glass p-4">
+                        <div class="text-xs text-zinc-400">Poor-Outcome Rate</div>
+                        <div id="a1PoorRate" class="text-2xl font-bold mono text-rose-300 mt-1">--</div>
+                    </div>
+                </div>
+
+                <div class="glass p-5 space-y-3">
+                    <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-3">
+                        <h3 class="text-sm font-bold text-zinc-100">Rule Violations Detected & Remediation Strategy</h3>
+                        <span class="text-xs mono text-zinc-400">Forensic Pair-Swap + Iterative MICE</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs sm:text-sm">
+                            <thead class="text-xs uppercase text-zinc-400 border-b border-zinc-800">
+                                <tr>
+                                    <th class="py-2.5 pr-4">Data Integrity Rule</th>
+                                    <th class="py-2.5 px-4">Violations</th>
+                                    <th class="py-2.5 pl-4">How We Fixed It</th>
+                                </tr>
+                            </thead>
+                            <tbody id="a1RulesBody" class="divide-y divide-zinc-800/60 text-zinc-300"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="glass p-5 space-y-3">
+                    <h3 class="text-sm font-bold text-zinc-100 border-b border-zinc-800 pb-3">Values Corrected Per Column</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs sm:text-sm">
+                            <thead class="text-xs uppercase text-zinc-400 border-b border-zinc-800">
+                                <tr>
+                                    <th class="py-2.5 pr-3">Column</th>
+                                    <th class="py-2.5 px-3">Format / Typo</th>
+                                    <th class="py-2.5 px-3">Out-of-Range</th>
+                                    <th class="py-2.5 px-3">CGPA / Solo Rule</th>
+                                    <th class="py-2.5 px-3">Missing Imputed</th>
+                                    <th class="py-2.5 pl-3 text-emerald-400">Total Corrected</th>
+                                </tr>
+                            </thead>
+                            <tbody id="a1ColsBody" class="divide-y divide-zinc-800/60 mono text-zinc-300"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================= -->
+            <!-- TAB A2: DASHBOARDS & VISUALIZATIONS                               -->
+            <!-- ================================================================= -->
+            <section id="tab-a2" class="tab-panel space-y-5">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <!-- Chart 1: Team Factor -->
+                    <div class="glass p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-zinc-100">Team Size vs. Poor Outcome Rate</h3>
+                            <span class="text-xs mono text-zinc-400">Factor 1</span>
+                        </div>
+                        <div id="chartTeamSize" class="h-64"></div>
+                        <p class="text-xs text-zinc-400">Solo groups and large 5-member teams experience elevated failure risks due to isolated workloads and coordination overhead.</p>
+                    </div>
+
+                    <!-- Chart 2: Academic Factor -->
+                    <div class="glass p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-zinc-100">Mid-Eval Score Bins vs. Failure Rate</h3>
+                            <span class="text-xs mono text-zinc-400">Factor 2</span>
+                        </div>
+                        <div id="chartMidEval" class="h-64"></div>
+                        <p class="text-xs text-zinc-400">Clear monotonic relationship: groups scoring below 60 on Mid-Evaluation require immediate academic triage.</p>
+                    </div>
+
+                    <!-- Chart 3: Supervisor Factor -->
+                    <div class="glass p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-zinc-100">Supervisor Meetings (First 8 Weeks)</h3>
+                            <span class="text-xs mono text-zinc-400">Factor 3</span>
+                        </div>
+                        <div id="chartMeetings" class="h-64"></div>
+                        <p class="text-xs text-zinc-400">Groups meeting their advisor fewer than 4 times in the first 8 weeks face more than double the cohort failure rate.</p>
+                    </div>
+
+                    <!-- Chart 4: Engagement Factor -->
+                    <div class="glass p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-zinc-100">GitHub Commits (First 8 Weeks)</h3>
+                            <span class="text-xs mono text-zinc-400">Factor 4</span>
+                        </div>
+                        <div id="chartCommits" class="h-64"></div>
+                        <p class="text-xs text-zinc-400">Low commit frequency early in semester serves as an objective digital footprint of stalled development.</p>
+                    </div>
+                </div>
+
+                <!-- Leakage Guardrail Card -->
+                <div class="glass p-5 space-y-3 border-emerald-500/30">
+                    <div class="flex items-center gap-2">
+                        <span class="text-emerald-400 text-sm">✓</span>
+                        <h3 class="text-sm font-bold text-zinc-100">Temporal Leakage Defense Protocol</h3>
+                    </div>
+                    <div class="text-xs text-zinc-400 leading-relaxed space-y-1">
+                        <p>All features post-dating Week 8 (<code class="mono text-zinc-200">final_defense_score</code>, <code class="mono text-zinc-200">extension_grant</code>) were explicitly purged before training.</p>
+                        <p>Dates were transformed into cyclical month features (<code class="mono text-zinc-200">sin</code>/<code class="mono text-zinc-200">cos</code>) to avoid memorizing historical calendars.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================= -->
+            <!-- TAB A3: MODEL ARENA                                               -->
+            <!-- ================================================================= -->
+            <section id="tab-a3" class="tab-panel space-y-5">
+                <div class="glass p-5 space-y-4">
+                    <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-3">
+                        <div>
+                            <h3 class="text-sm font-bold text-zinc-100">Candidate Classifier Benchmarks (Stratified 5-Fold CV)</h3>
+                            <p class="text-xs text-zinc-400">Model selection strictly optimized on OOF ROC-AUC and Brier calibration score</p>
+                        </div>
+                        <div id="selectedModelBadge" class="px-2.5 py-1 rounded-md text-xs font-mono font-medium badge-green"></div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs sm:text-sm">
+                            <thead class="text-xs uppercase text-zinc-400 border-b border-zinc-800">
+                                <tr>
+                                    <th class="py-2.5 pr-3">Model</th>
+                                    <th class="py-2.5 px-3">CV ROC-AUC</th>
+                                    <th class="py-2.5 px-3">Test ROC-AUC</th>
+                                    <th class="py-2.5 px-3">Test Recall</th>
+                                    <th class="py-2.5 px-3">Test F1</th>
+                                    <th class="py-2.5 px-3">Brier Score (Calibrated)</th>
+                                    <th class="py-2.5 pl-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="a3ArenaBody" class="divide-y divide-zinc-800/60 mono text-zinc-300"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <!-- Calibration Curve -->
+                    <div class="glass p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-zinc-100">Calibration Reliability Curve</h3>
+                            <span class="text-xs mono text-zinc-400">Platt Sigmoid Scaled</span>
+                        </div>
+                        <div id="chartCalibration" class="h-64"></div>
+                        <p class="text-xs text-zinc-400">Predicted probabilities closely align with the empirical 45° diagonal, validating trustworthy risk percentages.</p>
+                    </div>
+
+                    <!-- Cost Matrix / Decision Threshold -->
+                    <div class="glass p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-zinc-100">Optimal Decision Threshold</h3>
+                            <span id="optimalThreshBadge" class="text-xs mono text-zinc-300"></span>
+                        </div>
+                        <div id="chartThresholds" class="h-64"></div>
+                        <p class="text-xs text-zinc-400">Optimized to maximize recall of at-risk students while keeping false alarms within coordinator capacity.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================= -->
+            <!-- TAB A4 + A5: LIVE PREDICTOR & ATTRIBUTION                         -->
+            <!-- ================================================================= -->
+            <section id="tab-a4" class="tab-panel space-y-5">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+                    <!-- Left: Profiler Input Form -->
+                    <div class="lg:col-span-6 glass p-5 space-y-4">
+                        <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-3">
+                            <div>
+                                <h3 class="text-sm font-bold text-zinc-100">Week-8 FYP Group Profiler</h3>
+                                <p class="text-xs text-zinc-400">Live inference on strictly Week-8 attributes</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button id="btnPresetRisk" type="button"
+                                    class="text-[11px] px-2.5 py-1 rounded-md bg-rose-500/10 text-rose-300 border border-rose-500/25 hover:bg-rose-500/20 transition font-medium">Load
+                                    At-Risk Demo</button>
+                                <button id="btnPresetSafe" type="button"
+                                    class="text-[11px] px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/25 hover:bg-emerald-500/20 transition font-medium">Load
+                                    Healthy Demo</button>
+                            </div>
+                        </div>
+
+                        <form id="predictForm" class="grid grid-cols-2 gap-3 text-xs">
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Proposal Date</label>
+                                <input type="date" name="proposal_date" class="input-glass" />
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Campus</label>
+                                <select name="campus" class="input-glass"></select>
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Program</label>
+                                <select name="program" class="input-glass"></select>
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Leader Gender</label>
+                                <select name="leader_gender" class="input-glass"></select>
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Project Type</label>
+                                <select name="project_type" class="input-glass"></select>
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Industry Sponsor</label>
+                                <select name="has_industry_sponsor" class="input-glass"></select>
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Group Size (1–5)</label>
+                                <input type="number" name="group_size" min="1" max="5" step="1" class="input-glass" />
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Mid-Eval Score (0–100)</label>
+                                <input type="number" name="mid_eval_score" min="0" max="100" step="0.5" class="input-glass" />
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Team Avg CGPA (0–4)</label>
+                                <input type="number" name="team_avg_cgpa" min="0" max="4" step="0.01" class="input-glass" />
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Team Min CGPA (≤ Avg)</label>
+                                <input type="number" name="team_min_cgpa" min="0" max="4" step="0.01" class="input-glass" />
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Supervisor Exp (0–45 yrs)</label>
+                                <input type="number" name="supervisor_experience_years" min="0" max="45" step="1" class="input-glass" />
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Supervisor Active Groups (1–15)</label>
+                                <input type="number" name="supervisor_active_groups" min="1" max="15" step="1" class="input-glass" />
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Proposal Revisions (0–10)</label>
+                                <input type="number" name="proposal_revisions" min="0" max="10" step="1" class="input-glass" />
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Weeks to Approval (0–30)</label>
+                                <input type="number" name="weeks_to_proposal_approval" min="0" max="30" step="1" class="input-glass" />
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">Supervisor Meetings 8wk (0–30)</label>
+                                <input type="number" name="supervisor_meetings_8wk" min="0" max="30" step="1" class="input-glass" />
+                            </div>
+                            <div>
+                                <label class="text-zinc-400 block mb-1">GitHub Commits 8wk (0–1000)</label>
+                                <input type="number" name="github_commits_8wk" min="0" max="1000" step="1" class="input-glass" />
+                            </div>
+
+                            <div class="col-span-2 pt-2 flex gap-3">
+                                <button type="submit"
+                                    class="flex-1 py-2.5 rounded-lg bg-zinc-100 hover:bg-white text-zinc-950 font-bold text-xs transition shadow-sm">
+                                    Calculate Risk Prediction
+                                </button>
+                                <button id="btnSendToWhatIf" type="button"
+                                    class="px-4 py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold text-xs border border-zinc-700 transition">
+                                    Send to What-If →
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Right: Risk Card + Top 3 Explainability -->
+                    <div class="lg:col-span-6 space-y-5">
+                        <div id="riskTiltCard" class="glass p-6 space-y-4">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <div class="text-xs mono uppercase tracking-wider text-zinc-400">Estimated Failure Risk</div>
+                                    <div id="predProbText" class="text-4xl font-extrabold mono text-zinc-100 mt-1">--%</div>
+                                </div>
+                                <div class="text-right space-y-1.5">
+                                    <span id="predTierBadge"
+                                        class="inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider badge-green">--
+                                        RISK</span>
+                                    <div id="predOutcomeText" class="text-xs font-medium text-zinc-300">--</div>
+                                </div>
+                            </div>
+
+                            <!-- Probability Progress Bar -->
+                            <div class="w-full h-2 rounded-full bg-zinc-800 overflow-hidden">
+                                <div id="predProbBar"
+                                    class="h-full rounded-full transition-all duration-500 bg-emerald-500"
+                                    style="width: 0%"></div>
+                            </div>
+
+                            <!-- Plain-English Explanation -->
+                            <p id="predPlainExpl" class="text-xs text-zinc-300 leading-relaxed"></p>
+
+                            <!-- Concrete Coordinator Action -->
+                            <div class="p-3.5 rounded-lg bg-zinc-900 border border-zinc-800">
+                                <div class="text-[11px] mono uppercase tracking-wider text-zinc-400 font-bold mb-1">
+                                    Recommended Coordinator Intervention</div>
+                                <p id="predSupportStep" class="text-xs text-zinc-100 font-medium"></p>
+                            </div>
+                        </div>
+
+                        <!-- Top 3 Drivers (A5) -->
+                        <div class="glass p-5 space-y-3">
+                            <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
+                                <h4 class="text-xs font-bold uppercase text-zinc-300 tracking-wider">Top Risk Drivers (Attribution)</h4>
+                                <span class="text-[11px] mono text-zinc-500">Red = Risk Increase · Green = Protective</span>
+                            </div>
+                            <div id="predTop3Container" class="space-y-2.5"></div>
+                        </div>
+
+                        <!-- A4 Monotonicity Verification Panel -->
+                        <div class="glass p-5 space-y-3">
+                            <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-2">
+                                <h4 class="text-xs font-bold uppercase text-zinc-300 tracking-wider">Risk Tier Calibration Proof (A4)</h4>
+                                <span id="a4MonoBadge" class="text-[11px] mono px-2 py-0.5 rounded-md badge-green">Strictly Monotonic ✓</span>
+                            </div>
+                            <div id="a4TierProofGrid" class="grid grid-cols-3 gap-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================= -->
+            <!-- TAB A5: FAIRNESS CHECK                                            -->
+            <!-- ================================================================= -->
+            <section id="tab-a5" class="tab-panel space-y-5">
+                <div class="glass p-5 border-zinc-800 bg-zinc-900/40">
+                    <div class="text-xs mono uppercase tracking-wider text-zinc-400 mb-1">Fairness & Statistical Independence Audit</div>
+                    <p id="a5Takeaway" class="text-xs sm:text-sm text-zinc-200 font-medium leading-relaxed"></p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <!-- Gender Fairness -->
+                    <div class="glass p-5 space-y-4">
+                        <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-3">
+                            <h3 class="text-sm font-bold text-zinc-100">Leader Gender Audit (Test Split)</h3>
+                            <span id="a5GenderPval" class="text-xs mono text-zinc-400"></span>
+                        </div>
+                        <div id="chartFairGender" class="h-60"></div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs mono">
+                                <thead class="text-xs uppercase text-zinc-400 border-b border-zinc-800">
+                                    <tr>
+                                        <th class="py-2">Group</th>
+                                        <th class="py-2">Test n</th>
+                                        <th class="py-2">Pred Poor Rate (95% CI)</th>
+                                        <th class="py-2">Recall (95% CI)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="a5GenderBody" class="divide-y divide-zinc-800/60 text-zinc-200"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Campus Fairness -->
+                    <div class="glass p-5 space-y-4">
+                        <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-3">
+                            <h3 class="text-sm font-bold text-zinc-100">Campus Audit (≥ 30 Test Groups)</h3>
+                            <span id="a5CampusGapBadge" class="text-xs mono px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/25"></span>
+                        </div>
+                        <div id="chartFairCampus" class="h-60"></div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs mono">
+                                <thead class="text-xs uppercase text-zinc-400 border-b border-zinc-800">
+                                    <tr>
+                                        <th class="py-2">Campus</th>
+                                        <th class="py-2">Test n</th>
+                                        <th class="py-2">Actual Poor</th>
+                                        <th class="py-2">Pred Poor Rate</th>
+                                        <th class="py-2">Recall</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="a5CampusBody" class="divide-y divide-zinc-800/60 text-zinc-200"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================= -->
+            <!-- TAB A6: WEEKLY WATCHLIST                                          -->
+            <!-- ================================================================= -->
+            <section id="tab-a6" class="tab-panel space-y-5">
+                <div class="glass p-5 flex flex-wrap items-center justify-between gap-5">
+                    <div class="flex-1 min-w-[240px] space-y-2">
+                        <div class="flex items-center justify-between">
+                            <label for="watchlistKSlider" class="text-xs font-bold text-zinc-200 uppercase tracking-wider">Weekly Coordinator Capacity (K Groups)</label>
+                            <span id="watchlistKVal" class="text-base font-bold mono text-zinc-100">30</span>
+                        </div>
+                        <input id="watchlistKSlider" type="range" min="10" max="100" step="1" value="30" />
+                        <div class="flex justify-between text-[11px] mono text-zinc-500">
+                            <span>10 groups</span><span>50 groups</span><span>100 groups</span>
+                        </div>
+                    </div>
+                    <a id="btnDownloadWatchlist" href="/api/watchlist/download?k=30"
+                        class="px-4 py-2 rounded-lg bg-zinc-100 hover:bg-white text-zinc-950 font-semibold text-xs transition shadow-sm">
+                        ↓ Export Watchlist (.csv)
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="glass p-4">
+                        <div class="text-xs text-zinc-400">At-Risk Captured</div>
+                        <div id="a6Captured" class="text-2xl font-bold mono text-emerald-400 mt-1">--</div>
+                        <div id="a6RecallK" class="text-xs text-zinc-400 mt-0.5">--</div>
+                    </div>
+                    <div class="glass p-4">
+                        <div class="text-xs text-zinc-400">Precision @ K</div>
+                        <div id="a6PrecisionK" class="text-2xl font-bold mono text-zinc-100 mt-1">--</div>
+                        <div class="text-xs text-zinc-500 mt-0.5">Hit rate among K flagged</div>
+                    </div>
+                    <div class="glass p-4">
+                        <div class="text-xs text-zinc-400">Expected by Random Pick</div>
+                        <div id="a6RandomExp" class="text-2xl font-bold mono text-zinc-400 mt-1">--</div>
+                        <div class="text-xs text-zinc-500 mt-0.5">Baseline without AI</div>
+                    </div>
+                    <div class="glass p-4">
+                        <div class="text-xs text-zinc-400">AI Targeting Lift</div>
+                        <div id="a6Lift" class="text-2xl font-bold mono text-indigo-400 mt-1">--×</div>
+                        <div class="text-xs text-zinc-500 mt-0.5">Efficiency multiplier</div>
+                    </div>
+                </div>
+
+                <div class="glass p-5 space-y-3">
+                    <h3 class="text-sm font-bold text-zinc-100 border-b border-zinc-800 pb-3">Ranked Student Cohort Intervention Queue</h3>
+                    <div class="overflow-x-auto max-h-[520px] overflow-y-auto">
+                        <table class="w-full text-left text-xs sm:text-sm">
+                            <thead class="text-xs uppercase text-zinc-400 border-b border-zinc-800 sticky top-0 bg-zinc-950/95">
+                                <tr>
+                                    <th class="py-2.5 px-2">#</th>
+                                    <th class="py-2.5 px-2">Group ID</th>
+                                    <th class="py-2.5 px-2">Risk Prob</th>
+                                    <th class="py-2.5 px-2">Tier</th>
+                                    <th class="py-2.5 px-2">Top Risk Driver</th>
+                                    <th class="py-2.5 px-2">Actual Outcome</th>
+                                </tr>
+                            </thead>
+                            <tbody id="a6TableBody" class="divide-y divide-zinc-800/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================= -->
+            <!-- TAB A7: WHAT-IF SIMULATOR                                         -->
+            <!-- ================================================================= -->
+            <section id="tab-a7" class="tab-panel space-y-5">
+                <!-- Association != Causation Banner -->
+                <div class="p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
+                    <span class="text-base text-amber-400">⚠</span>
+                    <div class="text-xs text-amber-200 leading-relaxed">
+                        <strong class="uppercase tracking-wide mono font-semibold">Association ≠ Causation Notice:</strong>
+                        This simulator reflects statistical associations learned from historical cohorts — it does not guarantee a deterministic causal effect. Always combine model outputs with supervisor faculty judgment.
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                    <!-- Left: Actionable Levers Only -->
+                    <div class="lg:col-span-6 glass p-5 space-y-4">
+                        <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-3">
+                            <div>
+                                <h3 class="text-sm font-bold text-zinc-100">Actionable Intervention Levers</h3>
+                                <p class="text-xs text-zinc-400">Demographic & historical factors (gender, campus, CGPA) are locked</p>
+                            </div>
+                            <button id="btnFindBestLever" type="button"
+                                class="px-3 py-1.5 rounded-md bg-zinc-100 hover:bg-white text-zinc-950 font-bold text-xs transition shadow-sm">
+                                Find Best Lever
+                            </button>
+                        </div>
+
+                        <!-- Locked attributes indicator -->
+                        <div id="lockedSummary" class="flex flex-wrap gap-1.5 text-[11px] mono text-zinc-400"></div>
+
+                        <!-- Actionable Sliders -->
+                        <div id="whatifSliders" class="space-y-3"></div>
+
+                        <button id="btnResetLevers" type="button"
+                            class="w-full py-2 rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold border border-zinc-700 transition">
+                            Reset Levers to Baseline
+                        </button>
+                    </div>
+
+                    <!-- Right: Live Before / After Comparison -->
+                    <div class="lg:col-span-6 space-y-5">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="glass p-5 space-y-2">
+                                <div class="text-[11px] mono uppercase text-zinc-400">Before (Baseline)</div>
+                                <div id="wiBeforeProb" class="text-3xl font-extrabold mono text-zinc-100">--%</div>
+                                <span id="wiBeforeTier"
+                                    class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold uppercase">--</span>
+                            </div>
+                            <div id="wiAfterCard" class="glass p-5 space-y-2 transition-all duration-300">
+                                <div class="text-[11px] mono uppercase text-indigo-400">After Intervention</div>
+                                <div class="flex items-baseline gap-2">
+                                    <div id="wiAfterProb" class="text-3xl font-extrabold mono text-zinc-100">--%</div>
+                                    <span id="wiDeltaText" class="text-xs font-bold mono"></span>
+                                </div>
+                                <span id="wiAfterTier"
+                                    class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold uppercase">--</span>
+                            </div>
+                        </div>
+
+                        <div class="glass p-5 space-y-2">
+                            <div class="text-xs mono uppercase text-zinc-400">Updated Action Recommendation</div>
+                            <p id="wiAfterAction" class="text-xs text-zinc-200 leading-relaxed"></p>
+                        </div>
+
+                        <!-- Best Lever Output Card -->
+                        <div id="bestLeverBox" class="glass p-5 space-y-3 border-zinc-700 hidden">
+                            <div class="flex items-center justify-between flex-wrap gap-2 border-b border-zinc-800 pb-2">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-100">Optimal Single Lever Simulation</h4>
+                                <button id="btnApplyBestLever" type="button"
+                                    class="text-xs px-2.5 py-1 rounded-md bg-zinc-100 text-zinc-950 font-bold hover:bg-white transition">Apply
+                                    Optimal Lever</button>
+                            </div>
+                            <p id="bestLeverSummary" class="text-xs text-zinc-300"></p>
+                            <div id="bestLeverList" class="space-y-1.5 text-xs mono"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // 1. STATE & THEME CONFIGURATION (Linear Minimalist Dark)
+        // =========================================================================
+        let APP_DATA = null;
+        let CURRENT_BASELINE = {};
+        let LAST_BEST_LEVER = null;
+
+        function setThreePulseColor(tier) {
+            // Minimalist no-op (3D globe removed in professional theme)
+        }
+
+        function initTiltCard() {
+            // Clean subtle hover state
+        }
+
+        // =========================================================================
+        // 2. HELPER FUNCTIONS
+        // =========================================================================
+        function showLoading(text) {
+            document.getElementById('loadingText').textContent = text;
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        function animateNumber(elId, target, decimals = 0, duration = 400, suffix = '') {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            const start = 0;
+            const startTime = performance.now();
+            function step(now) {
+                const p = Math.min(1, (now - startTime) / duration);
+                const eased = 1 - Math.pow(1 - p, 3);
+                const val = start + (target - start) * eased;
+                el.textContent = val.toFixed(decimals) + suffix;
+                if (p < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        function badgeClassForTier(tier) {
+            if (tier === 'Low') return 'badge-green';
+            if (tier === 'Medium') return 'badge-yellow';
+            return 'badge-red';
+        }
+
+        const PLOTLY_DARK = {
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            font: { color: '#a1a1aa', family: 'Inter, sans-serif', size: 11 },
+            margin: { t: 16, r: 16, b: 44, l: 46 },
+            xaxis: { gridcolor: 'rgba(255,255,255,0.06)', zeroline: false },
+            yaxis: { gridcolor: 'rgba(255,255,255,0.06)', zeroline: false, title: 'Poor-Outcome Rate (%)' },
+        };
+
+        function renderBarChart(elId, data, colorHex) {
+            const trace = {
+                x: data.labels,
+                y: data.rates,
+                type: 'bar',
+                text: data.rates.map((r, i) => `${r}%<br>(n=${data.counts[i]})`),
+                textposition: 'auto',
+                marker: {
+                    color: data.rates.map((r) => r >= 25 ? '#f43f5e' : r >= 15 ? '#f59e0b' : '#6366f1'),
+                    line: { color: 'rgba(255,255,255,0.1)', width: 1 },
+                },
+                hovertemplate: '<b>%{x}</b><br>Poor-Outcome Rate: %{y}%<extra></extra>',
+            };
+            Plotly.newPlot(elId, [trace], {
+                ...PLOTLY_DARK,
+                xaxis: { ...PLOTLY_DARK.xaxis, title: data.x_label },
+            }, { responsive: true, displayModeBar: false });
+        }
+
+        // =========================================================================
+        // 3. RENDER ALL SECTIONS (A1 - A7)
+        // =========================================================================
+        function renderAll(data) {
+            APP_DATA = data;
+            document.getElementById('emptyStateBanner').classList.add('hidden');
+            document.getElementById('workspace').classList.remove('hidden');
+
+            const a1 = data.a1_cleaning;
+            const a3 = data.a3_models;
+            const bestM = a3.models.find((m) => m.name === a3.selected_model);
+
+            // Header & Hero KPIs
+            document.getElementById('datasetNameLabel').textContent = `${a1.source_name} (${a1.cleaned_rows} rows)`;
+            document.getElementById('datasetStatusBadge').classList.remove('hidden');
+            animateNumber('heroCleanedRows', a1.cleaned_rows);
+            document.getElementById('heroRemovedRows').textContent = `${a1.rows_removed} excluded`;
+            animateNumber('heroPoorRate', a1.poor_outcome_rate * 100, 1, 400, '%');
+            document.getElementById('heroPoorCount').textContent = `${a1.total_poor_outcomes} of ${a1.cleaned_rows} total`;
+            if (bestM) {
+                animateNumber('heroRocAuc', bestM.test_roc_auc, 3);
+                document.getElementById('heroModelShort').textContent = bestM.name;
+                animateNumber('heroRecall', bestM.test_recall * 100, 1, 400, '%');
+                document.getElementById('heroVsDummy').textContent = `vs 0% dummy baseline`;
+            }
+
+            // ---------------------------------------------------------------------
+            // A1: Data Cleaning
+            // ---------------------------------------------------------------------
+            animateNumber('a1InitialRows', a1.initial_rows);
+            animateNumber('a1CleanedRows', a1.cleaned_rows);
+            animateNumber('a1CellsFixed', a1.total_cells_corrected);
+            animateNumber('a1PoorCount', a1.total_poor_outcomes);
+            animateNumber('a1PoorRate', a1.poor_outcome_rate * 100, 2, 400, '%');
+
+            const rulesBody = document.getElementById('a1RulesBody');
+            rulesBody.innerHTML = a1.rule_violations.map((r) => `
+                <tr class="hover:bg-zinc-800/40 transition">
+                    <td class="py-2.5 pr-4 font-medium text-zinc-200">${r.rule}</td>
+                    <td class="py-2.5 px-4 mono ${r.violations_count > 0 ? 'text-amber-400 font-bold' : 'text-zinc-500'}">${r.violations_count}</td>
+                    <td class="py-2.5 pl-4 text-xs text-zinc-400">${r.remediation}</td>
+                </tr>
+            `).join('');
+
+            const colsBody = document.getElementById('a1ColsBody');
+            colsBody.innerHTML = a1.corrections_per_column.map((c) => `
+                <tr class="hover:bg-zinc-800/40 transition">
+                    <td class="py-2 pr-3 font-sans font-medium text-zinc-200">${c.column}</td>
+                    <td class="py-2 px-3">${c.format_typos}</td>
+                    <td class="py-2 px-3">${c.out_of_range}</td>
+                    <td class="py-2 px-3">${c.logical_rule_swaps}</td>
+                    <td class="py-2 px-3">${c.missing_imputed}</td>
+                    <td class="py-2 pl-3 text-emerald-400 font-bold">${c.total_corrected}</td>
+                </tr>
+            `).join('');
+
+            // ---------------------------------------------------------------------
+            // A2: Insights Charts
+            // ---------------------------------------------------------------------
+            const a2 = data.a2_charts;
+            renderBarChart('chartTeamSize', a2.group_size, '#6366f1');
+            renderBarChart('chartMidEval', a2.mid_eval, '#f59e0b');
+            renderBarChart('chartMeetings', a2.supervisor_meetings, '#10b981');
+            renderBarChart('chartCommits', a2.github_commits, '#38bdf8');
+
+            // ---------------------------------------------------------------------
+            // A3: Model Arena
+            // ---------------------------------------------------------------------
+            document.getElementById('selectedModelBadge').textContent = `Best Selected: ${a3.selected_model}`;
+            const arenaBody = document.getElementById('a3ArenaBody');
+            arenaBody.innerHTML = a3.models.map((m) => {
+                const isWinner = m.name === a3.selected_model;
+                return `
+                <tr class="${isWinner ? 'bg-zinc-800/60 font-semibold' : 'hover:bg-zinc-800/30'} transition">
+                    <td class="py-2.5 pr-3 font-sans text-zinc-100 flex items-center gap-2">
+                        ${isWinner ? '<span class="text-emerald-400">★</span>' : ''}
+                        ${m.name}
+                    </td>
+                    <td class="py-2.5 px-3 text-zinc-300">${m.cv_roc_auc_mean.toFixed(3)} ± ${m.cv_roc_auc_std.toFixed(3)}</td>
+                    <td class="py-2.5 px-3 ${isWinner ? 'text-indigo-400 font-bold' : 'text-zinc-200'}">${m.test_roc_auc.toFixed(3)}</td>
+                    <td class="py-2.5 px-3 text-emerald-400 font-bold">${(m.test_recall * 100).toFixed(1)}%</td>
+                    <td class="py-2.5 px-3">${m.test_f1.toFixed(3)}</td>
+                    <td class="py-2.5 px-3">${m.test_brier.toFixed(4)}</td>
+                    <td class="py-2.5 pl-3">
+                        ${isWinner
+                        ? '<span class="text-[10px] px-2 py-0.5 rounded badge-green">Production Winner</span>'
+                        : '<span class="text-zinc-500 text-xs">Evaluated</span>'}
+                    </td>
+                </tr>
+            `;
+            }).join('');
+
+            // Calibration reliability curve
+            const cal = a3.calibration_curve;
+            Plotly.newPlot('chartCalibration', [
+                {
+                    x: [0, 1], y: [0, 1], mode: 'lines',
+                    line: { dash: 'dash', color: 'rgba(255,255,255,0.3)', width: 1.5 },
+                    name: 'Perfect Calibration',
+                },
+                {
+                    x: cal.prob_pred, y: cal.prob_true, mode: 'lines+markers',
+                    line: { color: '#6366f1', width: 2.5 },
+                    marker: { size: 7, color: '#818cf8' },
+                    name: a3.selected_model,
+                },
+            ], {
+                ...PLOTLY_DARK,
+                xaxis: { ...PLOTLY_DARK.xaxis, title: 'Mean Predicted Probability' },
+                yaxis: { ...PLOTLY_DARK.yaxis, title: 'Fraction of Positives' },
+                legend: { orientation: 'h', y: 1.15 },
+            }, { responsive: true, displayModeBar: false });
+
+            // Optimal threshold tradeoff curve
+            const th = a3.threshold_curve;
+            document.getElementById('optimalThreshBadge').textContent = `Cost-Optimal Threshold = ${a3.optimal_threshold.toFixed(2)}`;
+            Plotly.newPlot('chartThresholds', [
+                {
+                    x: th.thresholds, y: th.recalls.map((v) => +(v * 100).toFixed(1)),
+                    mode: 'lines', line: { color: '#10b981', width: 2 }, name: 'Recall (%)',
+                },
+                {
+                    x: th.thresholds, y: th.precisions.map((v) => +(v * 100).toFixed(1)),
+                    mode: 'lines', line: { color: '#6366f1', width: 2 }, name: 'Precision (%)',
+                },
+                {
+                    x: th.thresholds, y: th.f1s.map((v) => +(v * 100).toFixed(1)),
+                    mode: 'lines', line: { color: '#f59e0b', width: 2 }, name: 'F1-Score (%)',
+                },
+            ], {
+                ...PLOTLY_DARK,
+                xaxis: { ...PLOTLY_DARK.xaxis, title: 'Decision Threshold' },
+                yaxis: { ...PLOTLY_DARK.yaxis, title: 'Score (%)' },
+                shapes: [{
+                    type: 'line',
+                    x0: a3.optimal_threshold, x1: a3.optimal_threshold,
+                    y0: 0, y1: 100,
+                    line: { color: '#f43f5e', width: 1.5, dash: 'dot' },
+                }],
+                legend: { orientation: 'h', y: 1.15 },
+            }, { responsive: true, displayModeBar: false });
+
+            // ---------------------------------------------------------------------
+            // A4: Populate Profiler Form & Predict
+            // ---------------------------------------------------------------------
+            populatePredictForm(data.default_form, data.form_options);
+            runPredictionOnForm();
+
+            // Calibration monotonic proof
+            const pf = a3.calibration_proof;
+            document.getElementById('a4MonoBadge').textContent = pf.strictly_monotonic ? 'Strictly Monotonic ✓' : 'Non-Monotonic ⚠';
+            document.getElementById('a4TierProofGrid').innerHTML = pf.tiers.map((t) => `
+                <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800">
+                    <div class="text-[11px] mono uppercase text-zinc-400 font-semibold">${t.tier} Risk</div>
+                    <div class="text-xs text-zinc-500 mt-0.5">Cut-off: ${t.range_str}</div>
+                    <div class="text-base font-extrabold mono text-zinc-100 mt-1.5">${(t.observed_poor_rate * 100).toFixed(1)}%</div>
+                    <div class="text-[10px] text-zinc-400">Observed failure rate (n=${t.group_count})</div>
+                </div>
+            `).join('');
+
+            // ---------------------------------------------------------------------
+            // A5: Fairness Checks
+            // ---------------------------------------------------------------------
+            renderFairnessSection(data.a5_fairness);
+
+            // ---------------------------------------------------------------------
+            // A6: Watchlist (Default K=30)
+            // ---------------------------------------------------------------------
+            fetchWatchlist(30);
+
+            // ---------------------------------------------------------------------
+            // A7: Initialize What-If Baseline
+            // ---------------------------------------------------------------------
+            initWhatIfControls(data.default_form);
+        }
+
+        // =========================================================================
+        // FORM & PREDICTION HANDLERS (A4)
+        // =========================================================================
+        function populatePredictForm(vals, options) {
+            const form = document.getElementById('predictForm');
+            if (!form) return;
+
+            ['campus', 'program', 'leader_gender', 'project_type', 'has_industry_sponsor'].forEach((field) => {
+                const sel = form.elements[field];
+                if (!sel || !options[field]) return;
+                sel.innerHTML = options[field].map((opt) => `<option value="${opt}">${opt}</option>`).join('');
+            });
+
+            Object.entries(vals).forEach(([k, v]) => {
+                if (form.elements[k]) form.elements[k].value = v;
+            });
+        }
+
+        function readPredictForm() {
+            const form = document.getElementById('predictForm');
+            const data = {};
+            new FormData(form).forEach((val, key) => { data[key] = val; });
+            return data;
+        }
+
+        async function runPredictionOnForm() {
+            const payload = readPredictForm();
+            CURRENT_BASELINE = { ...payload };
+
+            const res = await fetch('/api/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: payload }),
+            });
+            if (!res.ok) return;
+            const p = await res.json();
+
+            // Update Prediction Deck
+            const probPct = (p.failure_probability * 100).toFixed(1);
+            document.getElementById('predProbText').textContent = `${probPct}%`;
+            document.getElementById('predProbBar').style.width = `${Math.min(100, Math.max(0, probPct))}%`;
+            document.getElementById('predProbBar').className = `h-full rounded-full transition-all duration-500 ${p.risk_tier === 'Low' ? 'bg-emerald-500' : p.risk_tier === 'Medium' ? 'bg-amber-500' : 'bg-rose-500'}`;
+
+            const badge = document.getElementById('predTierBadge');
+            badge.textContent = `${p.risk_tier} RISK`;
+            badge.className = `inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${badgeClassForTier(p.risk_tier)}`;
+
+            document.getElementById('predOutcomeText').textContent = p.predicted_label === 1 ? 'Predicted Poor Outcome' : 'Predicted Passing Outcome';
+            document.getElementById('predPlainExpl').textContent = p.plain_english_summary;
+            document.getElementById('predSupportStep').textContent = p.recommended_coordinator_action;
+
+            // Render Top 3 Attribution Drivers
+            const top3Container = document.getElementById('predTop3Container');
+            top3Container.innerHTML = p.top_drivers.map((d, i) => {
+                const isRiskInc = d.impact > 0;
+                return `
+                <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-between gap-3 text-xs">
+                    <div>
+                        <div class="font-semibold text-zinc-100">#${i + 1} · ${d.label}</div>
+                        <div class="text-[11px] text-zinc-400 mt-0.5">${d.reason}</div>
+                    </div>
+                    <div class="text-right mono">
+                        <span class="font-bold ${isRiskInc ? 'text-rose-400' : 'text-emerald-400'}">
+                            ${isRiskInc ? '+' : ''}${(d.impact * 100).toFixed(1)} pp
+                        </span>
+                        <div class="text-[10px] text-zinc-500">Value: ${d.value}</div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        // =========================================================================
+        // FAIRNESS AUDIT (A5)
+        // =========================================================================
+        function renderFairnessSection(f) {
+            document.getElementById('a5Takeaway').textContent = f.takeaway;
+            document.getElementById('a5GenderPval').textContent = `Chi-Square / 2-Prop p-value = ${f.gender_p_value.toFixed(4)}`;
+
+            document.getElementById('a5GenderBody').innerHTML = f.gender_comparison.map((g) => `
+                <tr class="hover:bg-zinc-800/40 transition">
+                    <td class="py-2 font-sans font-medium text-zinc-200">${g.group} Leader</td>
+                    <td class="py-2">${g.count}</td>
+                    <td class="py-2 font-semibold text-zinc-100">${(g.predicted_poor_rate * 100).toFixed(1)}% <span class="text-zinc-500 font-normal">[${(g.pred_ci_lo * 100).toFixed(1)}–${(g.pred_ci_hi * 100).toFixed(1)}%]</span></td>
+                    <td class="py-2 text-emerald-400 font-semibold">${(g.recall * 100).toFixed(1)}% <span class="text-zinc-500 font-normal">[${(g.rec_ci_lo * 100).toFixed(1)}–${(g.rec_ci_hi * 100).toFixed(1)}%]</span></td>
+                </tr>
+            `).join('');
+
+            Plotly.newPlot('chartFairGender', [
+                {
+                    name: 'Predicted Risk Rate (%)',
+                    x: f.gender_comparison.map((g) => g.group + '-led'),
+                    y: f.gender_comparison.map((g) => +(g.predicted_poor_rate * 100).toFixed(1)),
+                    type: 'bar',
+                    marker: { color: '#6366f1' },
+                },
+                {
+                    name: 'Recall (%)',
+                    x: f.gender_comparison.map((g) => g.group + '-led'),
+                    y: f.gender_comparison.map((g) => +(g.recall * 100).toFixed(1)),
+                    type: 'bar',
+                    marker: { color: '#10b981' },
+                },
+            ], { ...PLOTLY_DARK, barmode: 'group', yaxis: { ...PLOTLY_DARK.yaxis, title: 'Percentage (%)' }, legend: { orientation: 'h', y: 1.15 } },
+                { responsive: true, displayModeBar: false });
+
+            if (f.campus_gap && f.campus_gap.predicted_rate_highest) {
+                document.getElementById('a5CampusGapBadge').textContent =
+                    `Max Gap: ${(f.campus_gap.largest_predicted_rate_gap * 100).toFixed(1)} pp (${f.campus_gap.predicted_rate_highest} vs ${f.campus_gap.predicted_rate_lowest})`;
+            }
+
+            document.getElementById('a5CampusBody').innerHTML = f.campus_comparison.map((c) => `
+                <tr class="hover:bg-zinc-800/40 transition">
+                    <td class="py-2 font-sans font-medium text-zinc-200">${c.campus}</td>
+                    <td class="py-2">${c.count}</td>
+                    <td class="py-2">${c.actual_poor_count}</td>
+                    <td class="py-2 text-zinc-100 font-semibold">${(c.predicted_poor_rate * 100).toFixed(1)}%</td>
+                    <td class="py-2 text-emerald-400 font-semibold">${(c.recall * 100).toFixed(1)}%</td>
+                </tr>
+            `).join('');
+
+            Plotly.newPlot('chartFairCampus', [
+                {
+                    name: 'Pred Risk Rate (%)',
+                    x: f.campus_comparison.map((c) => c.campus),
+                    y: f.campus_comparison.map((c) => +(c.predicted_poor_rate * 100).toFixed(1)),
+                    type: 'bar',
+                    marker: { color: '#6366f1' },
+                },
+                {
+                    name: 'Recall (%)',
+                    x: f.campus_comparison.map((c) => c.campus),
+                    y: f.campus_comparison.map((c) => +(c.recall * 100).toFixed(1)),
+                    type: 'bar',
+                    marker: { color: '#f59e0b' },
+                },
+            ], { ...PLOTLY_DARK, barmode: 'group', yaxis: { ...PLOTLY_DARK.yaxis, title: 'Percentage (%)' }, legend: { orientation: 'h', y: 1.15 } },
+                { responsive: true, displayModeBar: false });
+        }
+
+        // =========================================================================
+        // A6: WATCHLIST & CAPACITY ALLOCATION
+        // =========================================================================
+        async function fetchWatchlist(k) {
+            document.getElementById('watchlistKVal').textContent = k;
+            document.getElementById('btnDownloadWatchlist').href = `/api/watchlist/download?k=${k}`;
+            const res = await fetch(`/api/watchlist?k=${k}`);
+            if (!res.ok) return;
+            const w = await res.json();
+
+            document.getElementById('a6Captured').textContent = `${w.captured_poor_outcomes} / ${w.total_test_poor_outcomes}`;
+            document.getElementById('a6RecallK').textContent = `${(w.recall_at_k * 100).toFixed(1)}% of all test poor outcomes`;
+            document.getElementById('a6PrecisionK').textContent = `${(w.precision_at_k * 100).toFixed(1)}%`;
+            document.getElementById('a6RandomExp').textContent = `${w.random_baseline_captured} groups`;
+            document.getElementById('a6Lift').textContent = `${w.targeting_lift.toFixed(2)}×`;
+
+            const tbody = document.getElementById('a6TableBody');
+            tbody.innerHTML = w.groups.map((g) => `
+                <tr class="hover:bg-zinc-800/40 transition">
+                    <td class="py-2.5 px-2 mono text-zinc-500 font-semibold">${g.rank}</td>
+                    <td class="py-2.5 px-2 font-mono font-medium text-zinc-200">${g.group_id} <span class="text-zinc-500 text-xs">(${g.campus})</span></td>
+                    <td class="py-2.5 px-2 mono font-bold ${g.tier === 'High' ? 'text-rose-400' : 'text-amber-400'}">${g.probability_pct}%</td>
+                    <td class="py-2.5 px-2">
+                        <span class="text-[10px] px-2 py-0.5 rounded ${badgeClassForTier(g.tier)} font-semibold uppercase">${g.tier}</span>
+                    </td>
+                    <td class="py-2.5 px-2 text-xs text-zinc-300">
+                        <div class="font-medium">${g.top_risk_driver}</div>
+                        <div class="text-[11px] text-zinc-400">${g.recommended_action}</div>
+                    </td>
+                    <td class="py-2.5 px-2 mono font-semibold ${g.actual_poor_outcome === 'Yes' ? 'text-rose-400' : 'text-zinc-400'}">
+                        ${g.actual_poor_outcome}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // =========================================================================
+        // A7: WHAT-IF LAB
+        // =========================================================================
+        const ACTIONABLE_LEVERS = [
+            { key: 'supervisor_meetings_8wk', label: 'Supervisor Meetings (First 8 Weeks)', min: 0, max: 20, step: 1 },
+            { key: 'github_commits_8wk', label: 'GitHub Commits (First 8 Weeks)', min: 0, max: 200, step: 5 },
+            { key: 'weeks_to_proposal_approval', label: 'Weeks to Proposal Approval', min: 1, max: 16, step: 1 },
+            { key: 'proposal_revisions', label: 'Proposal Revisions Required', min: 0, max: 6, step: 1 },
+            { key: 'mid_eval_score', label: 'Mid-Evaluation Remediation Score', min: 20, max: 95, step: 1 },
+        ];
+
+        function initWhatIfControls(baseline) {
+            CURRENT_BASELINE = { ...baseline };
+            const container = document.getElementById('whatifSliders');
+            container.innerHTML = ACTIONABLE_LEVERS.map((lev) => {
+                const val = baseline[lev.key] !== undefined ? baseline[lev.key] : lev.min;
+                return `
+                <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 space-y-1.5" data-lever="${lev.key}">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-medium text-zinc-300">${lev.label}</span>
+                        <span id="leverVal_${lev.key}" class="mono font-bold text-zinc-100">${val}</span>
+                    </div>
+                    <input type="range" min="${lev.min}" max="${lev.max}" step="${lev.step}" value="${val}"
+                           class="whatif-slider" data-lever="${lev.key}" />
+                    <div class="flex justify-between text-[10px] mono text-zinc-500">
+                        <span>Min: ${lev.min}</span><span>Max: ${lev.max}</span>
+                    </div>
+                </div>
+            `;
+            }).join('');
+
+            // Locked summary indicators
+            const locked = [
+                `Campus: ${baseline.campus || 'Lahore'}`,
+                `Program: ${baseline.program || 'BSCS'}`,
+                `Gender: ${baseline.leader_gender || 'Male'}`,
+                `Team CGPA: ${baseline.team_avg_cgpa || '3.0'}`,
+                `Group Size: ${baseline.group_size || '3'}`,
+            ];
+            document.getElementById('lockedSummary').innerHTML = locked.map((l) => `
+                <span class="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">${l} 🔒</span>
+            `).join('');
+
+            document.querySelectorAll('.whatif-slider').forEach((sl) => {
+                sl.addEventListener('input', (e) => {
+                    const lk = e.target.dataset.lever;
+                    const lbl = document.getElementById(`leverVal_${lk}`);
+                    if (lbl) lbl.textContent = e.target.value;
+                    runWhatIf();
+                });
+            });
+
+            runWhatIf();
+        }
+
+        async function runWhatIf() {
+            const levers = {};
+            document.querySelectorAll('.whatif-slider').forEach((sl) => {
+                levers[sl.dataset.lever] = Number(sl.value);
+            });
+
+            const res = await fetch('/api/whatif', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ baseline: CURRENT_BASELINE, levers }),
+            });
+            if (!res.ok) return;
+            const w = await res.json();
+
+            document.getElementById('wiBeforeProb').textContent = `${(w.before_prob * 100).toFixed(1)}%`;
+            const bTier = document.getElementById('wiBeforeTier');
+            bTier.textContent = `${w.before_tier} RISK`;
+            bTier.className = `inline-block px-2.5 py-0.5 rounded text-xs font-bold uppercase ${badgeClassForTier(w.before_tier)}`;
+
+            document.getElementById('wiAfterProb').textContent = `${(w.after_prob * 100).toFixed(1)}%`;
+            const aTier = document.getElementById('wiAfterTier');
+            aTier.textContent = `${w.after_tier} RISK`;
+            aTier.className = `inline-block px-2.5 py-0.5 rounded text-xs font-bold uppercase ${badgeClassForTier(w.after_tier)}`;
+
+            const deltaEl = document.getElementById('wiDeltaText');
+            const d = w.delta_probability * 100;
+            if (d < 0) {
+                deltaEl.textContent = `(${d.toFixed(1)} pp)`;
+                deltaEl.className = 'text-xs font-bold mono text-emerald-400';
+            } else if (d > 0) {
+                deltaEl.textContent = `(+${d.toFixed(1)} pp)`;
+                deltaEl.className = 'text-xs font-bold mono text-rose-400';
+            } else {
+                deltaEl.textContent = `(0.0 pp)`;
+                deltaEl.className = 'text-xs font-bold mono text-zinc-500';
+            }
+
+            document.getElementById('wiAfterAction').textContent = w.recommended_coordinator_action;
+        }
+
+        // =========================================================================
+        // EVENT LISTENERS & INITIALIZATION
+        // =========================================================================
+        document.querySelectorAll('.nav-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-btn').forEach((b) => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
+                btn.classList.add('active');
+                const panel = document.getElementById(btn.dataset.tab);
+                panel.classList.add('active');
+                setTimeout(() => {
+                    panel.querySelectorAll('.js-plotly-plot').forEach((plot) => Plotly.Plots.resize(plot));
+                }, 40);
+            });
+        });
+
+        async function handleCsvUpload(file) {
+            if (!file) return;
+            showLoading(`INGESTING ${file.name.toUpperCase()} & TRAINING 4 CALIBRATED MODELS...`);
+            const fd = new FormData();
+            fd.append('file', file);
+            try {
+                const res = await fetch('/api/upload', { method: 'POST', body: fd });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || 'Upload failed');
+                renderAll(data);
+            } catch (err) {
+                alert('Error: ' + err.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        document.getElementById('csvFileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) handleCsvUpload(file);
+        });
+
+        const emptyState = document.getElementById('emptyStateBanner');
+        if (emptyState) {
+            emptyState.addEventListener('click', () => {
+                document.getElementById('csvFileInput').click();
+            });
+            emptyState.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                emptyState.classList.add('border-zinc-500', 'bg-zinc-900/60');
+            });
+            emptyState.addEventListener('dragleave', () => {
+                emptyState.classList.remove('border-zinc-500', 'bg-zinc-900/60');
+            });
+            emptyState.addEventListener('drop', (e) => {
+                e.preventDefault();
+                emptyState.classList.remove('border-zinc-500', 'bg-zinc-900/60');
+                const file = e.dataTransfer.files[0];
+                if (file && file.name.toLowerCase().endsWith('.csv')) {
+                    handleCsvUpload(file);
+                } else {
+                    alert('Please drop a valid .csv file.');
+                }
+            });
+        }
+
+        document.getElementById('predictForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await runPredictionOnForm();
+        });
+
+        document.getElementById('btnPresetRisk').addEventListener('click', () => {
+            const form = document.getElementById('predictForm');
+            form.elements['mid_eval_score'].value = 48.0;
+            form.elements['team_avg_cgpa'].value = 2.35;
+            form.elements['team_min_cgpa'].value = 2.10;
+            form.elements['supervisor_meetings_8wk'].value = 2;
+            form.elements['github_commits_8wk'].value = 12;
+            form.elements['proposal_revisions'].value = 4;
+            form.elements['weeks_to_proposal_approval'].value = 14;
+            form.elements['group_size'].value = 4;
+            runPredictionOnForm();
+        });
+
+        document.getElementById('btnPresetSafe').addEventListener('click', () => {
+            const form = document.getElementById('predictForm');
+            form.elements['mid_eval_score'].value = 88.0;
+            form.elements['team_avg_cgpa'].value = 3.65;
+            form.elements['team_min_cgpa'].value = 3.50;
+            form.elements['supervisor_meetings_8wk'].value = 10;
+            form.elements['github_commits_8wk'].value = 145;
+            form.elements['proposal_revisions'].value = 1;
+            form.elements['weeks_to_proposal_approval'].value = 3;
+            form.elements['group_size'].value = 3;
+            runPredictionOnForm();
+        });
+
+        document.getElementById('btnSendToWhatIf').addEventListener('click', () => {
+            document.querySelectorAll('.nav-btn').forEach((b) => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
+            const wiBtn = document.querySelector('.nav-btn[data-tab="tab-a7"]');
+            const wiPanel = document.getElementById('tab-a7');
+            if (wiBtn && wiPanel) {
+                wiBtn.classList.add('active');
+                wiPanel.classList.add('active');
+            }
+            initWhatIfControls(readPredictForm());
+        });
+
+        document.getElementById('watchlistKSlider').addEventListener('input', (e) => {
+            fetchWatchlist(e.target.value);
+        });
+
+        document.getElementById('btnFindBestLever').addEventListener('click', async () => {
+            showLoading('CALCULATING OPTIMAL COUNTERFACTUAL INTERVENTION LEVER...');
+            try {
+                const res = await fetch('/api/whatif/best-lever', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: CURRENT_BASELINE }),
+                });
+                if (!res.ok) throw new Error('Simulation failed');
+                const out = await res.json();
+                LAST_BEST_LEVER = out.best_lever;
+
+                const box = document.getElementById('bestLeverBox');
+                box.classList.remove('hidden');
+                document.getElementById('bestLeverSummary').innerHTML =
+                    `Top Lever: <strong class="text-emerald-400">${out.best_lever.label}</strong> provides <strong>${(out.best_lever.risk_reduction_pp).toFixed(1)} pp</strong> risk reduction (from ${(out.baseline_risk * 100).toFixed(1)}% down to ${(out.best_lever.simulated_risk * 100).toFixed(1)}%).`;
+
+                document.getElementById('bestLeverList').innerHTML = out.ranked_levers.map((lev) => `
+                    <div class="flex items-center justify-between p-2 rounded bg-zinc-900 border border-zinc-800">
+                        <span class="text-zinc-300">${lev.label} (Set to ${lev.to_value})</span>
+                        <span class="text-emerald-400 font-bold">-${lev.risk_reduction_pp.toFixed(1)} pp</span>
+                    </div>
+                `).join('');
+            } catch (err) {
+                alert('Error: ' + err.message);
+            } finally {
+                hideLoading();
+            }
+        });
+
+        document.getElementById('btnApplyBestLever').addEventListener('click', () => {
+            if (!LAST_BEST_LEVER) return;
+            const el = document.querySelector(`#whatifSliders [data-lever="${LAST_BEST_LEVER.lever}"] input`);
+            if (!el) return;
+            el.value = LAST_BEST_LEVER.to_value;
+            const lbl = document.getElementById(`leverVal_${LAST_BEST_LEVER.lever}`);
+            if (lbl) lbl.textContent = el.value;
+            runWhatIf();
+        });
+
+        document.getElementById('btnResetLevers').addEventListener('click', () => {
+            initWhatIfControls(CURRENT_BASELINE);
+        });
+
+        // Boot Sequence
+        window.addEventListener('DOMContentLoaded', async () => {
+            initTiltCard();
+            try {
+                const res = await fetch('/api/overview');
+                const data = await res.json();
+                if (data.ready) {
+                    renderAll(data);
+                } else {
+                    document.getElementById('emptyStateBanner').classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('emptyStateBanner').classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>
