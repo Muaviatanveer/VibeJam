@@ -36,14 +36,14 @@ Because of this class imbalance, a naive majority classifier predicting `"No Ris
 
 ```mermaid
 flowchart LR
-    A[Dirty Cohort CSV] --> B[Forensic Cleaning Engine<br/>Dedup · Alias Map · Pair-Swap]
-    B --> C[Leakage-Free 80/20<br/>Stratified Split]
-    C --> D[Domain Feature<br/>Engineering]
-    D --> E[Iterative BayesianRidge<br/>MICE Imputer]
-    E --> F[4-Model Stratified CV Arena<br/>LR · RF · HistGB · Calibrated Ensemble]
-    F --> G[OOF Threshold &<br/>Monotonic Tier Calibration]
-    G --> H[FastAPI Engine]
-    H --> I[3D WebGL Mission Control<br/>A1–A7 Live Cockpit]
+    A["Dirty Cohort CSV"] --> B["Forensic Cleaning Engine<br>Dedup - Alias Map - Pair Swap"]
+    B --> C["Leakage-Free 80-20<br>Stratified Split"]
+    C --> D["Domain Feature<br>Engineering"]
+    D --> E["Iterative BayesianRidge<br>MICE Imputer"]
+    E --> F["4-Model Stratified CV Arena<br>LR - RF - HistGB - Calibrated Ensemble"]
+    F --> G["OOF Threshold and<br>Monotonic Tier Calibration"]
+    G --> H["FastAPI Engine"]
+    H --> I["3D WebGL Mission Control<br>A1-A7 Live Cockpit"]
 ```
 
 ---
@@ -57,7 +57,9 @@ Rather than naive median imputation or destructive clipping, FYP-Pulse enforces 
 * **Solo-Group Identity:** For $n_{\text{size}} = 1$, exact recovery enforces $c_{\text{min}} \equiv c_{\text{avg}}$.
 * **Multivariate Imputation by Chained Equations (MICE):** Missing and out-of-range numeric cells are estimated strictly inside training folds via iterative **Bayesian Ridge Regression**:
 
-$$\hat{x}_{i,j}^{(t)} = \mathbb{E}\!\left[x_{i,j} \;\middle|\; \mathbf{x}_{i,-j}^{(t-1)},\, \boldsymbol{\theta}_j\right], \qquad \boldsymbol{\theta}_j \sim \mathcal{N}\!\left(\mathbf{0}, \lambda^{-1}\mathbf{I}\right)$$
+```math
+\hat{x}_{i,j}^{(t)} = \mathbb{E}\left[x_{i,j} \;\middle|\; \mathbf{x}_{i,-j}^{(t-1)},\, \boldsymbol{\theta}_j\right], \qquad \boldsymbol{\theta}_j \sim \mathcal{N}\left(\mathbf{0}, \lambda^{-1}\mathbf{I}\right)
+```
 
 ---
 
@@ -66,12 +68,12 @@ Using strictly Week-8 observable variables (excluding post-Week-8 leakage column
 
 | Engineered Feature | Mathematical Formulation | Domain Rationale |
 | :--- | :--- | :--- |
-| **CGPA Disparity Gap** | $g_{\text{cgpa}} = \max\!\left(0,\; c_{\text{avg}} - c_{\text{min}}\right)$ | Captures internal *weakest-link / free-rider* academic imbalance hidden by raw average GPA. |
+| **CGPA Disparity Gap** | $g_{\text{cgpa}} = \max(0,\; c_{\text{avg}} - c_{\text{min}})$ | Captures internal *weakest-link / free-rider* academic imbalance hidden by raw average GPA. |
 | **Supervision Bandwidth** | $b_{\text{sup}} = \dfrac{m_{\text{8wk}}}{\max(1,\, a_{\text{sup}})}$ | Measures true mentorship attention per active supervised group. |
 | **Log Commit Velocity** | $v_{\text{git}} = \ln\!\left(1 + \dfrac{k_{\text{commits}}}{\max(1,\, n_{\text{size}})}\right)$ | Normalizes heavy-tailed GitHub activity per student member. |
 | **Approval Delay Ratio** | $r_{\text{delay}} = \dfrac{w_{\text{approval}}}{8}$ | Fraction of the first 8 weeks consumed prior to proposal approval. |
 | **Proposal Friction** | $f_{\text{prop}} = r_{\text{revisions}} \cdot w_{\text{approval}}$ | Interaction capturing early scoping instability. |
-| **Cyclical Seasonality** | $\left(\sin\!\frac{2\pi m}{12},\; \cos\!\frac{2\pi m}{12}\right)$ | Encodes intake calendar periodicity without raw timestamp overfitting. |
+| **Cyclical Seasonality** | $\left(\sin\frac{2\pi m}{12},\; \cos\frac{2\pi m}{12}\right)$ | Encodes intake calendar periodicity without raw timestamp overfitting. |
 
 ---
 
@@ -84,22 +86,30 @@ We train **4 distinct model families** under 5-Fold Stratified Cross-Validation 
 
 Tree ensembles and class-weighted classifiers distort raw posterior probabilities. We apply **Platt Sigmoid Calibration** to produce well-calibrated risk probabilities $\hat{p} \in [0, 1]$, audited by **Brier Score**:
 
-$$\hat{p}(y = 1 \mid s) = \frac{1}{1 + \exp(A s + B)}, \qquad \text{BS} = \frac{1}{N}\sum_{i=1}^{N}(\hat{p}_i - y_i)^2$$
+```math
+\hat{p}(y = 1 \mid s) = \frac{1}{1 + \exp(A s + B)}, \qquad \text{BS} = \frac{1}{N}\sum_{i=1}^{N}(\hat{p}_i - y_i)^2
+```
 
 To prevent test-set leakage, the decision threshold $\tau^*$ is optimized exclusively on **Out-of-Fold (OOF)** validation probabilities maximizing $F_1$ with an early-warning Recall tie-breaker:
 
-$$\tau^* = \arg\max_{\tau \in [0.15,\, 0.80]} \Big( F_1(\tau) + 0.03 \cdot \text{Recall}(\tau) \Big)$$
+```math
+\tau^* = \arg\max_{\tau \in [0.15,\, 0.80]} \Big( F_1(\tau) + 0.03 \cdot \text{Recall}(\tau) \Big)
+```
 
 Risk tier cut-offs $(\tau_{\text{low}}, \tau_{\text{high}})$ are verified on the held-out test set to guarantee **strict empirical monotonicity**:
 
-$$\widehat{P}(Y=1 \mid \text{Low}) \;<\; \widehat{P}(Y=1 \mid \text{Medium}) \;<\; \widehat{P}(Y=1 \mid \text{High})$$
+```math
+\widehat{P}(Y=1 \mid \text{Low}) \;<\; \widehat{P}(Y=1 \mid \text{Medium}) \;<\; \widehat{P}(Y=1 \mid \text{High})
+```
 
 ---
 
 ### 4. Exact Interventional Local Explainability (A5)
 For any evaluated FYP group $\mathbf{x}$, feature $j$'s signed probability attribution $\phi_j(\mathbf{x})$ is computed via exact interventional marginalization over a stratified training background distribution $\mathcal{B}$—automatically propagating changes through all coupled engineered features:
 
-$$\phi_j(\mathbf{x}) = f(\mathbf{x}) - \frac{1}{|\mathcal{B}|}\sum_{\mathbf{b} \in \mathcal{B}} f\!\left(\mathbf{x}_{\setminus j},\, b_j\right)$$
+```math
+\phi_j(\mathbf{x}) = f(\mathbf{x}) - \frac{1}{|\mathcal{B}|}\sum_{\mathbf{b} \in \mathcal{B}} f\left(\mathbf{x}_{\setminus j},\, b_j\right)
+```
 
 * $\phi_j(\mathbf{x}) > 0 \implies$ **Increases risk** (Crimson indicator)
 * $\phi_j(\mathbf{x}) < 0 \implies$ **Decreases risk** (Emerald indicator)
@@ -110,14 +120,22 @@ $$\phi_j(\mathbf{x}) = f(\mathbf{x}) - \frac{1}{|\mathcal{B}|}\sum_{\mathbf{b} \
 ### 5. Statistical Fairness Audit: Wilson CIs & Z-Test (A5)
 Subgroup disparities across **Leader Gender** and **Campuses with $n \ge 30$ test groups** are evaluated with exact **Wilson 95% Confidence Intervals** and a two-proportion $Z$-test computed via the Gaussian error function $\mathrm{erf}(\cdot)$:
 
-$$\text{CI}_{95\%} = \frac{\hat{p} + \frac{z^2}{2n} \pm z\sqrt{\frac{\hat{p}(1-\hat{p})}{n} + \frac{z^2}{4n^2}}}{1 + \frac{z^2}{n}}, \qquad p = 2\left(1 - \frac{1}{2}\left[1 + \mathrm{erf}\!\left(\frac{|Z|}{\sqrt{2}}\right)\right]\right)$$
+```math
+\text{CI}_{0.95} = \frac{\hat{p} + \frac{z^2}{2n} \pm z\sqrt{\frac{\hat{p}(1-\hat{p})}{n} + \frac{z^2}{4n^2}}}{1 + \frac{z^2}{n}}
+```
+
+```math
+p = 2\left(1 - \frac{1}{2}\left[1 + \mathrm{erf}\left(\frac{|Z|}{\sqrt{2}}\right)\right]\right)
+```
 
 ---
 
 ### 6. Coordinator Capacity Watchlist & What-If Sensitivity (A6 & A7)
 * **Weekly Watchlist Lift ($K \in [10, 100]$):**
 
-$$\text{Precision}@K = \frac{\text{TP}_K}{K}, \qquad \mathbb{E}[\text{Random Hits}] = K \cdot \bar{y}_{\text{test}}, \qquad \text{Lift}@K = \frac{\text{TP}_K}{K \cdot \bar{y}_{\text{test}}}$$
+```math
+\text{Precision}@K = \frac{\text{TP}_K}{K}, \qquad \mathbb{E}[\text{Random Hits}] = K \cdot \bar{y}_{\text{test}}, \qquad \text{Lift}@K = \frac{\text{TP}_K}{K \cdot \bar{y}_{\text{test}}}
+```
 
 * **Bounded Counterfactual Lever Search (A7):** Immutable attributes (`campus`, `program`, `leader_gender`, historical `CGPA`) are strictly locked. The *"Find Best Lever"* solver evaluates $\Delta \hat{p}_\ell = f(\mathbf{x} \oplus \ell^*) - f(\mathbf{x})$ across actionable levers only, accompanied by an explicit **Association $\neq$ Causation** notice.
 
